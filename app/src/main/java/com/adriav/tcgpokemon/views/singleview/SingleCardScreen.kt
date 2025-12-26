@@ -1,10 +1,7 @@
 package com.adriav.tcgpokemon.views.singleview
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -14,6 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
+import com.adriav.tcgpokemon.objects.AppHeader
 import com.adriav.tcgpokemon.objects.CenteredProgressIndicator
 import com.adriav.tcgpokemon.objects.TCGdexProvider
 import kotlinx.coroutines.Dispatchers
@@ -23,14 +21,13 @@ import net.tcgdex.sdk.Quality
 import net.tcgdex.sdk.models.Card
 
 @Composable
-fun SingleCardView(cardID: String, paddingValues: PaddingValues) {
+fun SingleCardScreen(cardID: String) {
     val tcgdex = TCGdexProvider.tcgdex
     var card by remember { mutableStateOf<Card?>(null) }
 
     LaunchedEffect(Unit) {
-        val api = tcgdex
         card = withContext(Dispatchers.IO) {
-            api.fetchCard(cardID)
+            tcgdex.fetchCard(cardID)
         }
     }
 
@@ -38,9 +35,8 @@ fun SingleCardView(cardID: String, paddingValues: PaddingValues) {
         CenteredProgressIndicator()
     } else {
         val imageURL: String = card!!.getImageUrl(Quality.HIGH, Extension.WEBP)
-        Column() {
-
-            Text(text = "${card!!.name} - ${card!!.id}")
+        Column {
+            AppHeader(card!!.name)
             AsyncImage(
                 model = imageURL,
                 contentDescription = card!!.name,

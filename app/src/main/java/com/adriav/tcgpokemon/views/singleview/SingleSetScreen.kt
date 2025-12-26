@@ -1,5 +1,6 @@
 package com.adriav.tcgpokemon.views.singleview
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,7 +36,7 @@ import net.tcgdex.sdk.models.CardResume
 import net.tcgdex.sdk.models.Set
 
 @Composable
-fun SingleSetScreen(setID: String) { // "base1"
+fun SingleSetScreen(setID: String, navigateToCard: (String) -> Unit) { // "neo2"
     val tcgdex = TCGdexProvider.tcgdex
     var set by remember { mutableStateOf<Set?>(null) }
     var cards by remember { mutableStateOf<List<CardResume>>(emptyList()) }
@@ -58,7 +59,10 @@ fun SingleSetScreen(setID: String) { // "base1"
             )
             LazyColumn(modifier = Modifier.padding(bottom = 32.dp)) {
                 items(cards.size) { index ->
-                    CardItemView(cards[index], index+1)
+                    Box (modifier = Modifier.padding(vertical = 16.dp)
+                        .clickable{navigateToCard(cards[index].id)}) {
+                        CardItemView(cards[index], index + 1)
+                    }
                 }
             }
         }

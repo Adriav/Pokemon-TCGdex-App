@@ -8,7 +8,7 @@ sealed class Routes: NavKey {
     data object Home:Routes()
 
     @Serializable
-    data class SingleCard(val id: String): Routes()
+    data class SingleCard(val cardID: String): Routes()
 
     @Serializable
     data object AllSets: Routes()
@@ -17,10 +17,10 @@ sealed class Routes: NavKey {
     data object AllSeries: Routes()
 
     @Serializable
-    data class SingleSerie(val id: String): Routes()
+    data class SingleSerie(val serieID: String): Routes()
 
     @Serializable
-    data class SingleSet(val id: String): Routes()
+    data class SingleSet(val setID: String): Routes()
 
     @Serializable
     data object MyCards: Routes()

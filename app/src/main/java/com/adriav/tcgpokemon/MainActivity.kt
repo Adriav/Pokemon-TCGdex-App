@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier
                     .fillMaxSize()
                     .padding(all = 16.dp)) {
-                    NavigationWrapper()
+                     NavigationWrapper()
                 }
             }
         }

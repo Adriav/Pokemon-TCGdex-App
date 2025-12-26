@@ -11,6 +11,7 @@ import com.adriav.tcgpokemon.navigation.Routes.*
 import com.adriav.tcgpokemon.views.allview.AllSeriesScreen
 import com.adriav.tcgpokemon.views.allview.AllSetsScreen
 import com.adriav.tcgpokemon.views.HomeScreen
+import com.adriav.tcgpokemon.views.singleview.SingleCardScreen
 import com.adriav.tcgpokemon.views.singleview.SingleSerieScreen
 import com.adriav.tcgpokemon.views.singleview.SingleSetScreen
 
@@ -25,7 +26,7 @@ fun NavigationWrapper() {
                 HomeScreen(navigateToAllSets = { backStack.add(AllSets) }, navigateToAllSeries = { backStack.add(AllSeries) })
             }
             entry<AllSeries> {
-                AllSeriesScreen() { serieID ->
+                AllSeriesScreen { serieID ->
                     backStack.add(SingleSerie(serieID))
                 }
             }
@@ -33,12 +34,17 @@ fun NavigationWrapper() {
                 AllSetsScreen()
             }
             entry<SingleSerie> {
-                SingleSerieScreen(it.id) {
+                SingleSerieScreen(it.serieID) {
                     setID -> backStack.add(SingleSet(setID))
                 }
             }
             entry<SingleSet> {
-                SingleSetScreen(it.id)
+                SingleSetScreen(it.setID) {
+                    cardID -> backStack.add(SingleCard(cardID))
+                }
+            }
+            entry<SingleCard> {
+                SingleCardScreen(it.cardID)
             }
         }
     )

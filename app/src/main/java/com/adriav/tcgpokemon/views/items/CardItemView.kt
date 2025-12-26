@@ -28,7 +28,6 @@ import net.tcgdex.sdk.models.CardResume
 fun CardItemView(cardResume: CardResume, index: Int) {
     Box(
         modifier = Modifier
-            .padding(vertical = 16.dp)
             .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
@@ -42,7 +41,7 @@ fun CardItemView(cardResume: CardResume, index: Int) {
                     modifier = Modifier.width(300.dp).padding(bottom = 4.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "$index - ${cardResume.name} - ${cardResume.id}", fontWeight = FontWeight.Bold)
+                    Text(text = "$index - ${cardResume.name} : ${cardResume.id}", fontWeight = FontWeight.Bold)
                     Icon(painterResource(R.drawable.baseline_check_24), contentDescription = "a")
                 }
                 val cardImage =
@@ -53,7 +52,8 @@ fun CardItemView(cardResume: CardResume, index: Int) {
                     contentDescription = cardResume.id,
                     modifier = Modifier
                         .width(300.dp)
-                        .height(400.dp),
+                        .height(400.dp)
+                        .padding(bottom = 8.dp),
                     contentScale = ContentScale.Fit,
                     placeholder = painterResource(R.drawable.loading_progress_icon),
                     error = painterResource(R.drawable.verror_code_vector_icon)
