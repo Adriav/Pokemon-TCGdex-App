@@ -1,7 +1,6 @@
 package com.adriav.tcgpokemon.views.allview
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,14 +15,13 @@ import kotlinx.coroutines.withContext
 import net.tcgdex.sdk.models.CardResume
 
 @Composable
-fun AllCardsScreen(paddingValues: PaddingValues) {
+fun AllCardsScreen() {
     val tcgdex = TCGdexProvider.tcgdex
     var allCards: Array<CardResume>? by remember { mutableStateOf(null) }
 
     LaunchedEffect(Unit) {
-        val api = tcgdex
         allCards = withContext(Dispatchers.IO) {
-            api.fetchCards()
+            tcgdex.fetchCards()
         }
     }
 

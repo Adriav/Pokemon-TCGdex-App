@@ -51,7 +51,7 @@ fun SingleSetScreen(setID: String, navigateToCard: (String) -> Unit) { // "neo2"
     if (set == null) {
         CenteredProgressIndicator()
     } else {
-        Column(modifier = Modifier.fillMaxWidth()) {
+        Column {
             SetHeader(set!!)
             HorizontalDivider(
                 modifier =

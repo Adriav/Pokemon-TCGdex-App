@@ -21,7 +21,6 @@ import net.tcgdex.sdk.Extension
 import net.tcgdex.sdk.models.SetResume
 
 @Composable
-// Vista de un UNICO SET a modo de item en un listado
 fun SetItemView(setResume: SetResume) {
     Box {
         Row(
@@ -42,7 +41,6 @@ fun SetItemView(setResume: SetResume) {
                 error = painterResource(R.drawable.verror_code_vector_icon)
             )
             Column(modifier = Modifier.padding(start = 8.dp)) {
-                // Text(text = "ID: ${setResume.id}")
                 Text(text = "Nombre: ${setResume.name}")
                 Text(text = "Total: ${setResume.cardCount.total}")
                 Text(text = "Oficial: ${setResume.cardCount.official}")
