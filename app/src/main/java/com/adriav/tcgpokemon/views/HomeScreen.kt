@@ -10,17 +10,18 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.adriav.tcgpokemon.models.HomeViewModel
 
 @Composable
-fun HomeScreen(navigateToAllSeries: () -> Unit, navigateToAllSets: () -> Unit) {
-    var text by remember { mutableStateOf("") }
+fun HomeScreen(navigateToAllSeries: () -> Unit, navigateToAllSets: () -> Unit, viewModel: HomeViewModel) {
+    val searchText : String by viewModel.searchText.observeAsState("")
+    val searchEnabled : Boolean by viewModel.searchEnabled.observeAsState(false)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -30,9 +31,12 @@ fun HomeScreen(navigateToAllSeries: () -> Unit, navigateToAllSets: () -> Unit) {
         // Barra de búsqueda
         Text(text = "Buscar una carta", fontSize = 24.sp)
         TextField(
-            value = text,
-            onValueChange = { text = it })
-        Button(onClick = {}, modifier = Modifier.fillMaxWidth(), enabled = text.isNotEmpty()) {
+            value = searchText,
+            onValueChange = { viewModel.onSearchChange(it) },
+            placeholder = { Text(text = "Buscar una carta") },
+            singleLine = true,
+            maxLines = 1)
+        Button(onClick = {}, modifier = Modifier.fillMaxWidth(), enabled = searchEnabled) {
             Text(text = "Buscar")
         }
         HorizontalDivider(Modifier.padding(top = 8.dp, bottom = 64.dp))

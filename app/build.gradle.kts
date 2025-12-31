@@ -33,8 +33,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
         jvmTarget = "11"
@@ -58,12 +58,13 @@ dependencies {
     // Coil
     implementation("io.coil-kt:coil-compose:2.5.0")
     // Navigation
-    implementation("androidx.navigation:navigation-compose:2.9.6")
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.kotlinx.serialization.core)
     // Hilt
     implementation("com.google.dagger:hilt-android:2.57.1")
+    implementation(libs.androidx.compose.runtime.livedata)
     ksp("com.google.dagger:hilt-android-compiler:2.57.1")
 
     testImplementation(libs.junit)

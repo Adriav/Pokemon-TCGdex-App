@@ -7,23 +7,34 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import com.adriav.tcgpokemon.navigation.Routes.*
+import com.adriav.tcgpokemon.models.HomeViewModel
+import com.adriav.tcgpokemon.navigation.Routes.AllSeries
+import com.adriav.tcgpokemon.navigation.Routes.AllSets
+import com.adriav.tcgpokemon.navigation.Routes.Home
+import com.adriav.tcgpokemon.navigation.Routes.SingleCard
+import com.adriav.tcgpokemon.navigation.Routes.SingleSerie
+import com.adriav.tcgpokemon.navigation.Routes.SingleSet
+import com.adriav.tcgpokemon.views.HomeScreen
 import com.adriav.tcgpokemon.views.allview.AllSeriesScreen
 import com.adriav.tcgpokemon.views.allview.AllSetsScreen
-import com.adriav.tcgpokemon.views.HomeScreen
 import com.adriav.tcgpokemon.views.singleview.SingleCardScreen
 import com.adriav.tcgpokemon.views.singleview.SingleSerieScreen
 import com.adriav.tcgpokemon.views.singleview.SingleSetScreen
 
 @Composable
-fun NavigationWrapper() {
+fun NavigationWrapper(homeViewModel: HomeViewModel = HomeViewModel()) {
     val backStack = rememberNavBackStack(Home)
-    NavDisplay(modifier = Modifier.padding(top = 16.dp),
+    NavDisplay(
+        modifier = Modifier.padding(top = 16.dp),
         backStack = backStack,
         onBack = { backStack.removeLastOrNull() },
         entryProvider = entryProvider {
             entry<Home> {
-                HomeScreen(navigateToAllSets = { backStack.add(AllSets) }, navigateToAllSeries = { backStack.add(AllSeries) })
+                HomeScreen(
+                    navigateToAllSets = { backStack.add(AllSets) },
+                    navigateToAllSeries = { backStack.add(AllSeries) },
+                    viewModel = homeViewModel
+                )
             }
             entry<AllSeries> {
                 AllSeriesScreen { serieID ->
@@ -34,13 +45,13 @@ fun NavigationWrapper() {
                 AllSetsScreen()
             }
             entry<SingleSerie> {
-                SingleSerieScreen(it.serieID) {
-                    setID -> backStack.add(SingleSet(setID))
+                SingleSerieScreen(it.serieID) { setID ->
+                    backStack.add(SingleSet(setID))
                 }
             }
             entry<SingleSet> {
-                SingleSetScreen(it.setID) {
-                    cardID -> backStack.add(SingleCard(cardID))
+                SingleSetScreen(it.setID) { cardID ->
+                    backStack.add(SingleCard(cardID))
                 }
             }
             entry<SingleCard> {

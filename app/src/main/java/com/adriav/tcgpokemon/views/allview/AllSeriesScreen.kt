@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.adriav.tcgpokemon.objects.ApiProvider
 import com.adriav.tcgpokemon.objects.AppHeader
 import com.adriav.tcgpokemon.objects.CenteredProgressIndicator
 import com.adriav.tcgpokemon.objects.TCGdexProvider
@@ -23,7 +24,7 @@ import net.tcgdex.sdk.models.SerieResume
 
 @Composable
 fun AllSeriesScreen(navigateToSerie: (String) -> Unit) {
-    val tcgdex = TCGdexProvider.tcgdex
+    val tcgdex = ApiProvider().tcgdex
     var cardSeries: Array<SerieResume>? by remember { mutableStateOf(null) }
 
     LaunchedEffect(Unit) {
