@@ -7,6 +7,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import com.adriav.tcgpokemon.models.AllSeriesViewModel
 import com.adriav.tcgpokemon.models.HomeViewModel
 import com.adriav.tcgpokemon.navigation.Routes.AllSeries
 import com.adriav.tcgpokemon.navigation.Routes.AllSets
@@ -22,7 +23,10 @@ import com.adriav.tcgpokemon.views.singleview.SingleSerieScreen
 import com.adriav.tcgpokemon.views.singleview.SingleSetScreen
 
 @Composable
-fun NavigationWrapper(homeViewModel: HomeViewModel = HomeViewModel()) {
+fun NavigationWrapper(
+    homeViewModel: HomeViewModel = HomeViewModel(),
+    seriesViewModel: AllSeriesViewModel = AllSeriesViewModel()
+) {
     val backStack = rememberNavBackStack(Home)
     NavDisplay(
         modifier = Modifier.padding(top = 16.dp),
@@ -37,7 +41,7 @@ fun NavigationWrapper(homeViewModel: HomeViewModel = HomeViewModel()) {
                 )
             }
             entry<AllSeries> {
-                AllSeriesScreen { serieID ->
+                AllSeriesScreen (viewModel = seriesViewModel) { serieID ->
                     backStack.add(SingleSerie(serieID))
                 }
             }
