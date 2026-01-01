@@ -9,6 +9,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.adriav.tcgpokemon.models.AllSeriesViewModel
+import com.adriav.tcgpokemon.models.AllSetsViewModel
 import com.adriav.tcgpokemon.models.HomeViewModel
 import com.adriav.tcgpokemon.models.SingleSerieViewModel
 import com.adriav.tcgpokemon.navigation.Routes.AllSeries
@@ -47,7 +48,10 @@ fun NavigationWrapper() {
                 }
             }
             entry<AllSets> {
-                AllSetsScreen()
+                val setsViewModel = hiltViewModel<AllSetsViewModel>()
+                AllSetsScreen(viewModel = setsViewModel) {setID ->
+                    backStack.add(SingleSet(setID))
+                }
             }
             entry<SingleSerie> { args ->
                 val viewModel = hiltViewModel<SingleSerieViewModel>()

@@ -27,11 +27,7 @@ class AllSeriesViewModel @Inject constructor(private val tcgdex: TCGdexProvider 
 
             } catch (e: Exception) {
                 e.printStackTrace()
-                // Handle error state here if needed
             }
         }
-
-        // DELETED: _cardSeries.value = tcgdex.fetchSeries()
-        // Reason: This line was running on the Main Thread and causing your app to crash.
     }
 }
