@@ -1,11 +1,15 @@
 package com.adriav.tcgpokemon.views.singleview
 
-import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,20 +17,25 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.adriav.tcgpokemon.R
 import com.adriav.tcgpokemon.models.SingleCardViewModel
 import com.adriav.tcgpokemon.objects.AppHeader
 import com.adriav.tcgpokemon.objects.CenteredProgressIndicator
 import net.tcgdex.sdk.Extension
 import net.tcgdex.sdk.Quality
-import net.tcgdex.sdk.models.Card
+import net.tcgdex.sdk.models.subs.CardAbility
+import net.tcgdex.sdk.models.subs.CardAttack
 
 @Composable
-fun SingleCardScreen(viewModel: SingleCardViewModel, cardID: String) {
+fun SingleCardScreen(viewModel: SingleCardViewModel, cardID: String) { // ID: swsh3-136
     // Scroll Helper
     val scrollState = rememberScrollState()
-    // Card Instance
+    // Card Attributes
     val card by viewModel.card.observeAsState(null)
     val cardName by viewModel.cardName.observeAsState("")
     val cardIllustrator by viewModel.cardIllustrator.observeAsState(null)
@@ -55,39 +64,169 @@ fun SingleCardScreen(viewModel: SingleCardViewModel, cardID: String) {
         CenteredProgressIndicator()
     } else {
         val imageURL = card!!.getImageUrl(Quality.HIGH, Extension.WEBP)
-        Column {
+        Column(Modifier.verticalScroll(scrollState, enabled = true, reverseScrolling = false)) {
             AppHeader(cardName)
             DisplayCardImage(imageURL, cardName)
             HorizontalDivider(Modifier.padding(vertical = 2.dp))
-            ShowAttackAbilities(scrollState, card)
+            cardAbilities?.let { ShowAbilities(it) }
+            cardAttacks?.let { ShowAttacks(it) }
+            DisplayCardDetails(
+                cardSet,
+                cardDexID,
+                cardIllustrator,
+                cardRarity
+            )
+            cardRetreat?.let { DisplayBattleTraits() }
+
+
         }
     }
 }
 
 @Composable
-fun DisplayCardImage(imageURL: String, cardName: String) {
+private fun DisplayBattleTraits() {
+    Card(modifier = Modifier.padding(all = 8.dp)) {
+        Box(modifier = Modifier.padding(all = 16.dp)) {
+            Column {}
+        }
+    }
+}
+
+@Composable
+private fun DisplayCardImage(imageURL: String, cardName: String) {
     AsyncImage(
         model = imageURL,
         contentDescription = cardName,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(4.dp),
-        contentScale = ContentScale.Fit
+            .padding(4.dp)
+            .height(450.dp),
+        contentScale = ContentScale.Fit,
+        placeholder = painterResource(R.drawable.loading_progress_icon),
+        error = painterResource(R.drawable.verror_code_vector_icon)
     )
 }
 
 @Composable
-fun SingleCardBody (){
-
+private fun ShowAbilities(cardAbilities: List<CardAbility>) {
+    Text(text = "HABILIDADES!", modifier = Modifier.padding(vertical = 4.dp))
+    cardAbilities.forEach { ability ->
+        Card(modifier = Modifier.padding(all = 8.dp)) {
+            Box(modifier = Modifier.padding(all = 16.dp)) {
+                Column {
+                    Text(
+                        text = "Coste: ${ability.type} - ${ability.name}",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+                    Text(text = ability.effect, fontSize = 18.sp)
+                }
+            }
+        }
+    }
 }
 
 @Composable
-fun ShowAttackAbilities(scrollState: ScrollState, card: Card?) {
-    Column (Modifier.verticalScroll(scrollState, enabled = true, reverseScrolling = false)) {
-        if (card == null) {
-            CenteredProgressIndicator()
-        } else {
-            Text(text = card.toString())
+private fun ShowAttacks(cardAttacks: List<CardAttack>) {
+    cardAttacks.forEach { attack ->
+        Card(modifier = Modifier.padding(all = 8.dp)) {
+            Box(modifier = Modifier.padding(all = 16.dp)) {
+                Column {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "Coste: ${attack.cost?.size} - ${attack.name}",
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        attack.damage?.let {
+                            Text(
+                                text = it,
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+                    attack.effect?.let { Text(text = it, fontSize = 18.sp) }
+                }
+            }
         }
+    }
+}
+
+@Composable
+private fun DisplayCardDetails(
+    cardSet: String?,
+    cardDexID: List<Int>?,
+    cardIllustrator: String?,
+    cardRarity: String?
+) {
+    Card(modifier = Modifier.padding(all = 8.dp)) {
+        Box(modifier = Modifier.padding(all = 16.dp)) {
+            Column {
+                cardSet?.let {
+                    CardSetRow(it)
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+                }
+                cardDexID?.let {
+                    CardDexRow(it.toString())
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+                }
+                cardIllustrator?.let {
+                    CardIllustratorRow(it)
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+                }
+                cardRarity?.let { CardRarityRow(it) }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CardSetRow(cardSet: String) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text(text = "Set", fontSize = 20.sp)
+        Text(text = cardSet, fontSize = 20.sp)
+    }
+}
+
+@Composable
+private fun CardDexRow(cardDexID: String) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text(text = "PokeDex N°", fontSize = 20.sp)
+        Text(text = cardDexID, fontSize = 20.sp)
+    }
+}
+
+@Composable
+private fun CardIllustratorRow(cardIllustrator: String) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text(text = "Artista", fontSize = 20.sp)
+        Text(text = cardIllustrator, fontSize = 20.sp)
+    }
+}
+
+@Composable
+private fun CardRarityRow(cardRarity: String) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text(text = "Rareza", fontSize = 20.sp)
+        Text(text = cardRarity, fontSize = 20.sp)
     }
 }

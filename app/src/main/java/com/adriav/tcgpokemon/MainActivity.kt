@@ -10,8 +10,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.adriav.tcgpokemon.models.SingleCardViewModel
 import com.adriav.tcgpokemon.navigation.NavigationWrapper
 import com.adriav.tcgpokemon.ui.theme.TCGPokemonTheme
+import com.adriav.tcgpokemon.views.singleview.SingleCardScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,10 +30,18 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize()
                         .padding(all = 16.dp)
                         .padding(bottom = 32.dp)
+                        .padding(top = 4.dp)
                 ) {
-                    NavigationWrapper()
+                    //NavigationWrapper()
+                    val singleCardViewModel = hiltViewModel<SingleCardViewModel>()
+                    SingleCardScreen(singleCardViewModel, "swsh3-136")
                 }
             }
         }
     }
 }
+
+/*
+* Furret: swsh3-136
+* Brock: gym1-15
+* */

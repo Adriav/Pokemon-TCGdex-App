@@ -31,7 +31,6 @@ import com.adriav.tcgpokemon.views.singleview.SingleSetScreen
 fun NavigationWrapper() {
     val backStack = rememberNavBackStack(Home)
     NavDisplay(
-        modifier = Modifier.padding(top = 16.dp),
         backStack = backStack,
         onBack = { backStack.removeLastOrNull() },
         entryProvider = entryProvider {

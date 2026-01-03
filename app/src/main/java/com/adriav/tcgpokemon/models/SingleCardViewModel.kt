@@ -8,7 +8,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.tcgdex.sdk.TCGdex
 import net.tcgdex.sdk.models.Card
-import net.tcgdex.sdk.models.SetResume
 import net.tcgdex.sdk.models.subs.CardAbility
 import net.tcgdex.sdk.models.subs.CardAttack
 import net.tcgdex.sdk.models.subs.CardWeakRes
