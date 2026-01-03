@@ -4,13 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adriav.tcgpokemon.objects.TCGdexProvider
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import net.tcgdex.sdk.TCGdex
 import net.tcgdex.sdk.models.SerieResume
 import javax.inject.Inject
 
-class AllSeriesViewModel @Inject constructor(private val tcgdex: TCGdexProvider = TCGdexProvider) : ViewModel() {
+@HiltViewModel
+class AllSeriesViewModel @Inject constructor(private val tcgdex: TCGdex) : ViewModel() {
     private val _cardSeries = MutableLiveData<Array<SerieResume>>()
     val cardSeries: LiveData<Array<SerieResume>> = _cardSeries
 
@@ -19,7 +21,7 @@ class AllSeriesViewModel @Inject constructor(private val tcgdex: TCGdexProvider 
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 // 1. Perform network call on IO thread
-                val response = tcgdex.provideTCGdex().fetchSeries()
+                val response = tcgdex.fetchSeries()
 
                 // 2. Update LiveData
                 // postValue safely updates LiveData from a background thread to the Main thread

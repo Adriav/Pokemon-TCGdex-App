@@ -25,16 +25,20 @@ fun SingleCardScreen(viewModel: SingleCardViewModel ,cardID: String) {
     if (card == null) {
         CenteredProgressIndicator()
     } else {
-        val imageURL: String = card!!.getImageUrl(Quality.HIGH, Extension.WEBP)
         Column {
             AppHeader(card!!.name)
-            AsyncImage(
-                model = imageURL,
-                contentDescription = card!!.name,
-                modifier = Modifier.fillMaxWidth()
-                    .padding(24.dp),
-                contentScale = ContentScale.Fit
-            )
+            DisplayCardImage(card!!.getImageUrl(Quality.HIGH, Extension.WEBP), card!!.name)
         }
     }
+}
+
+@Composable
+fun DisplayCardImage(imageURL: String, cardName: String) {
+    AsyncImage(
+        model = imageURL,
+        contentDescription = cardName,
+        modifier = Modifier.fillMaxWidth()
+            .padding(24.dp),
+        contentScale = ContentScale.Fit
+    )
 }

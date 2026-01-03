@@ -44,21 +44,21 @@ fun NavigationWrapper() {
                 )
             }
             entry<AllSeries> {
-                val seriesViewModel = hiltViewModel<AllSeriesViewModel>()
-                AllSeriesScreen (viewModel = seriesViewModel) { serieID ->
+                val allSeriesViewModel = hiltViewModel<AllSeriesViewModel>()
+                AllSeriesScreen (viewModel = allSeriesViewModel) { serieID ->
                     backStack.add(SingleSerie(serieID))
                 }
             }
             entry<AllSets> {
-                val setsViewModel = hiltViewModel<AllSetsViewModel>()
-                AllSetsScreen(viewModel = setsViewModel) {setID ->
+                val allSetsViewModel = hiltViewModel<AllSetsViewModel>()
+                AllSetsScreen(viewModel = allSetsViewModel) {setID ->
                     backStack.add(SingleSet(setID))
                 }
             }
             entry<SingleSerie> { args ->
-                val viewModel = hiltViewModel<SingleSerieViewModel>()
+                val singleSerieViewModel = hiltViewModel<SingleSerieViewModel>()
                 SingleSerieScreen(
-                    viewModel = viewModel,
+                    viewModel = singleSerieViewModel,
                     serieID = args.serieID,
                     navigateToSet = { setID ->
                         backStack.add(SingleSet(setID))
@@ -66,14 +66,14 @@ fun NavigationWrapper() {
                 )
             }
             entry<SingleSet> {args ->
-                val viewModel = hiltViewModel<SingleSetViewModel>()
-                SingleSetScreen(viewModel = viewModel, setID = args.setID) { cardID ->
+                val singleSetViewModel = hiltViewModel<SingleSetViewModel>()
+                SingleSetScreen(viewModel = singleSetViewModel, setID = args.setID) { cardID ->
                     backStack.add(SingleCard(cardID))
                 }
             }
             entry<SingleCard> { args ->
-                val viewModel = hiltViewModel<SingleCardViewModel>()
-                SingleCardScreen(viewModel, args.cardID)
+                val singleCardViewModel = hiltViewModel<SingleCardViewModel>()
+                SingleCardScreen(singleCardViewModel, args.cardID)
             }
         }
     )
