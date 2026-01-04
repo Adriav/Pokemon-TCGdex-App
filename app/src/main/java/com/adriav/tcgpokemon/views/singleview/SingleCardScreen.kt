@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,10 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -32,6 +28,7 @@ import com.adriav.tcgpokemon.R
 import com.adriav.tcgpokemon.models.SingleCardViewModel
 import com.adriav.tcgpokemon.objects.AppHeader
 import com.adriav.tcgpokemon.objects.CenteredProgressIndicator
+import com.adriav.tcgpokemon.objects.GetTypeColor
 import net.tcgdex.sdk.Extension
 import net.tcgdex.sdk.Quality
 import net.tcgdex.sdk.models.subs.CardAbility
@@ -47,13 +44,11 @@ fun SingleCardScreen(viewModel: SingleCardViewModel, cardID: String) { // ID: sw
     val cardName by viewModel.cardName.observeAsState("")
     val cardIllustrator by viewModel.cardIllustrator.observeAsState(null)
     val cardRarity by viewModel.cardRarity.observeAsState(null)
-    val cardCategory by viewModel.cardCategory.observeAsState(null)
     val cardSet by viewModel.cardSet.observeAsState(null)
     val cardDexID by viewModel.dexID.observeAsState(null)
     val cardHP by viewModel.cardHP.observeAsState(null)
     val cardTypes by viewModel.cardTypes.observeAsState(null)
     val cardEvolveFrom by viewModel.evolveFrom.observeAsState(null)
-    val cardDescription by viewModel.cardDescription.observeAsState(null)
     val cardAbilities by viewModel.cardAbilities.observeAsState(null)
     val cardAttacks by viewModel.cardAttacks.observeAsState(null)
     val cardWeaknesses by viewModel.cardWeaknesses.observeAsState(null)
@@ -75,38 +70,70 @@ fun SingleCardScreen(viewModel: SingleCardViewModel, cardID: String) { // ID: sw
             AppHeader(cardName)
             DisplayCardImage(imageURL, cardName)
             HorizontalDivider(Modifier.padding(vertical = 2.dp))
-            cardHP?.let { ShowTypeHP(cardTypes!![0], it) }
+            cardHP?.let { ShowTypeHP(cardTypes!![0], it, cardEvolveFrom) }
             cardAbilities?.let { ShowAbilities(it) }
             cardAttacks?.let { ShowAttacks(it) }
             DisplayCardDetails(
                 cardSet,
                 cardDexID?.get(0),
                 cardIllustrator,
-                cardRarity
+                cardRarity,
+                cardEnergyType,
+                cardTrainerType,
             )
             cardRetreat?.let { DisplayBattleTraits(cardWeaknesses, cardResistances, cardRetreat) }
-            // cardTypes?.let { Text(text = "Tipo: $it", fontSize = 20.sp) }
+            cardEffect?.let { DisplayCardEffect(cardEffect!!) }
         }
     }
 }
 
 @Composable
-fun ShowTypeHP(type: String, hp: Int) {
+fun DisplayCardEffect(cardEffect: String) {
+    Card(modifier = Modifier.padding(all = 16.dp)) {
+        Column(Modifier.padding(all = 12.dp)) {
+            Text(text = "Effect", fontSize = 20.sp)
+            HorizontalDivider(Modifier.padding(vertical = 4.dp))
+            Text(text = cardEffect)
+        }
+    }
+
+}
+
+@Composable
+fun ShowTypeHP(type: String, hp: Int, cardEvolveFrom: String?) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = GetTypeColor(type)
         ), modifier = Modifier.padding(all = 4.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(all = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = "$type type", fontSize = 20.sp)
-            Row {
-                Text(text = "$hp", fontSize = 20.sp)
-                Text(text = "HP", fontSize = 10.sp)
+        Column(modifier = Modifier.padding(all = 12.dp)) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(text = "$type type", fontSize = 20.sp)
+                Row {
+                    Text(text = "$hp", fontSize = 20.sp)
+                    Text(text = "HP", fontSize = 10.sp)
+                }
+            }
+            cardEvolveFrom?.let {
+                HorizontalDivider(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(text = "Evolves from:", fontSize = 20.sp)
+                    Text(text = it)
+                }
             }
         }
     }
@@ -235,7 +262,9 @@ private fun DisplayCardDetails(
     cardSet: String?,
     cardDexID: Int?,
     cardIllustrator: String?,
-    cardRarity: String?
+    cardRarity: String?,
+    cardEnergyType: String?,
+    cardTrainerType: String?
 ) {
     Card(modifier = Modifier.padding(all = 8.dp)) {
         Box(modifier = Modifier.padding(all = 16.dp)) {
@@ -252,9 +281,36 @@ private fun DisplayCardDetails(
                     CardIllustratorRow(it)
                     HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
                 }
-                cardRarity?.let { CardRarityRow(it) }
+                cardRarity?.let {
+                    CardRarityRow(it)
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+                }
+                cardEnergyType?.let { EnergyTypeRow(it) }
+                cardTrainerType?.let { TrainerTypeRow(it) }
             }
         }
+    }
+}
+
+@Composable
+fun TrainerTypeRow(trainerType: String) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text(text = "Type", fontSize = 20.sp)
+        Text(text = trainerType, fontSize = 20.sp)
+    }
+}
+
+@Composable
+fun EnergyTypeRow(energyType: String) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text(text = "Type", fontSize = 20.sp)
+        Text(text = energyType, fontSize = 20.sp)
     }
 }
 
@@ -286,7 +342,7 @@ private fun CardIllustratorRow(cardIllustrator: String) {
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth()
     ) {
-        Text(text = "Artista", fontSize = 20.sp)
+        Text(text = "Artist", fontSize = 20.sp)
         Text(text = cardIllustrator, fontSize = 20.sp)
     }
 }
@@ -297,24 +353,7 @@ private fun CardRarityRow(cardRarity: String) {
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth()
     ) {
-        Text(text = "Rareza", fontSize = 20.sp)
+        Text(text = "Rarity", fontSize = 20.sp)
         Text(text = cardRarity, fontSize = 20.sp)
-    }
-}
-
-@Composable
-fun GetTypeColor(colorName: String): Color {
-    val context = LocalContext.current
-
-    val colorResId = context.resources.getIdentifier(
-        colorName,
-        "color",
-        context.packageName
-    )
-
-    return if (colorResId != 0) {
-        colorResource(id = colorResId)
-    } else {
-        Color.Gray // fallback
     }
 }

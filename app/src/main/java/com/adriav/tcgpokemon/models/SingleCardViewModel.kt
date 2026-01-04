@@ -27,9 +27,6 @@ class SingleCardViewModel @Inject constructor(
     val cardIllustrator = _cardIllustrator
     private val _cardRarity = MutableLiveData<String>()
     val cardRarity = _cardRarity
-    private val _cardCategory = MutableLiveData<String>()
-    val cardCategory = _cardCategory
-
     private val _cardSet = MutableLiveData<String>()
     val cardSet = _cardSet
     private val _dexID = MutableLiveData<List<Int>?>()
@@ -40,8 +37,6 @@ class SingleCardViewModel @Inject constructor(
     val cardTypes = _cardTypes
     private val _evolveFrom = MutableLiveData<String?>()
     val evolveFrom = _evolveFrom
-    private val _cardDescription = MutableLiveData<String?>()
-    val cardDescription = _cardDescription
     private val _cardAbilities = MutableLiveData<List<CardAbility>>()
     val cardAbilities = _cardAbilities
     private val _cardAttacks = MutableLiveData<List<CardAttack>>()
@@ -71,13 +66,11 @@ class SingleCardViewModel @Inject constructor(
                 _cardName.postValue(response.name)
                 _cardIllustrator.postValue(response.illustrator)
                 _cardRarity.postValue(response.rarity)
-                _cardCategory.postValue(response.category)
                 _cardSet.postValue(response.set.name)
                 _dexID.postValue(response.dexId)
                 _cardHP.postValue(response.hp)
                 _cardTypes.postValue(response.types)
                 _evolveFrom.postValue(response.evolveFrom)
-                _cardDescription.postValue(response.description)
                 _cardAbilities.postValue(response.abilities)
                 _cardAttacks.postValue(response.attacks)
                 _cardWeaknesses.postValue(response.weaknesses)

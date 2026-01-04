@@ -30,11 +30,11 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize()
                         .padding(all = 16.dp)
                         .padding(bottom = 32.dp)
-                        .padding(top = 4.dp)
+                        .padding(top = 6.dp)
                 ) {
                     //NavigationWrapper()
                     val singleCardViewModel = hiltViewModel<SingleCardViewModel>()
-                    SingleCardScreen(singleCardViewModel, "swsh3-54")
+                    SingleCardScreen(singleCardViewModel, "gym1-128")
                 }
             }
         }

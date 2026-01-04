@@ -1,5 +1,6 @@
 package com.adriav.tcgpokemon.objects
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -51,5 +54,23 @@ fun CenteredProgressIndicator() {
             color = Color(0xFF2D6BE0),
             strokeWidth = 8.dp
         )
+    }
+}
+
+@SuppressLint("LocalContextResourcesRead")
+@Composable
+fun GetTypeColor(colorName: String): Color {
+    val context = LocalContext.current
+
+    val colorResId = context.resources.getIdentifier(
+        colorName,
+        "color",
+        context.packageName
+    )
+
+    return if (colorResId != 0) {
+        colorResource(id = colorResId)
+    } else {
+        Color.Gray // fallback
     }
 }
