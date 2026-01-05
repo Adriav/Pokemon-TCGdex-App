@@ -19,5 +19,6 @@
     <color name="Metal">#FFB8B8D0</color>
     <color name="Psychic">#FFA040A0</color>
     <color name="Water">#FF6890F0</color>
+    <color name="BattleTraits">#FFb90e35</color>
 
 </resources>

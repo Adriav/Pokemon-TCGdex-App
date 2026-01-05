@@ -1,5 +1,6 @@
 package com.adriav.tcgpokemon.views.singleview
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
@@ -17,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -28,6 +31,9 @@ import com.adriav.tcgpokemon.R
 import com.adriav.tcgpokemon.models.SingleCardViewModel
 import com.adriav.tcgpokemon.objects.AppHeader
 import com.adriav.tcgpokemon.objects.CenteredProgressIndicator
+import com.adriav.tcgpokemon.objects.EnergyIconRow
+import com.adriav.tcgpokemon.objects.RetreatCostIcons
+import com.adriav.tcgpokemon.objects.WeakResIconRow
 import com.adriav.tcgpokemon.objects.getTypeColor
 import net.tcgdex.sdk.Extension
 import net.tcgdex.sdk.Quality
@@ -39,6 +45,8 @@ import net.tcgdex.sdk.models.subs.CardWeakRes
 fun SingleCardScreen(viewModel: SingleCardViewModel, cardID: String) { // ID: swsh3-136
     // Scroll Helper
     val scrollState = rememberScrollState()
+    // Energy Type
+
     // Card Attributes
     val card by viewModel.card.observeAsState(null)
     val cardName by viewModel.cardName.observeAsState("")
@@ -70,7 +78,7 @@ fun SingleCardScreen(viewModel: SingleCardViewModel, cardID: String) { // ID: sw
             AppHeader(cardName)
             DisplayCardImage(imageURL, cardName)
             HorizontalDivider(Modifier.padding(vertical = 2.dp))
-            cardHP?.let { ShowTypeHP(cardTypes!![0], it, cardEvolveFrom) }
+            cardHP?.let { ShowTypeHP(cardTypes!!, it, cardEvolveFrom) }
             cardAbilities?.let { ShowAbilities(it) }
             cardAttacks?.let { ShowAttacks(it) }
             DisplayCardDetails(
@@ -81,7 +89,13 @@ fun SingleCardScreen(viewModel: SingleCardViewModel, cardID: String) { // ID: sw
                 cardEnergyType,
                 cardTrainerType,
             )
-            cardRetreat?.let { DisplayBattleTraits(cardWeaknesses, cardResistances, cardRetreat) }
+            if (hasBattleTraits(cardWeaknesses, cardResistances, cardRetreat)) {
+                DisplayBattleTraits(
+                    cardWeaknesses,
+                    cardResistances,
+                    cardRetreat
+                )
+            }
             cardEffect?.let { DisplayCardEffect(cardEffect!!) }
         }
     }
@@ -100,42 +114,46 @@ fun DisplayCardEffect(cardEffect: String) {
 }
 
 @Composable
-fun ShowTypeHP(type: String, hp: Int, cardEvolveFrom: String?) {
+fun ShowTypeHP(types: List<String>, hp: Int, cardEvolveFrom: String?) {
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = getTypeColor(type)
+            containerColor = getTypeColor(types[0])
         ), modifier = Modifier.padding(all = 4.dp)
     ) {
-        Column(modifier = Modifier.padding(all = 12.dp)) {
+        Column(modifier = Modifier.padding(all = 8.dp)) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 4.dp),
+                    .padding(vertical = 4.dp)
+                    .padding(horizontal = 40.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = "$type type", fontSize = 20.sp)
+                EnergyIconRow(types)
                 Row {
                     Text(text = "$hp", fontSize = 20.sp)
                     Text(text = "HP", fontSize = 10.sp)
                 }
             }
-            cardEvolveFrom?.let {
-                HorizontalDivider(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
-                )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(text = "Evolves from:", fontSize = 20.sp)
-                    Text(text = it)
-                }
-            }
+            cardEvolveFrom?.let { EvolvesFromRow(it) }
         }
+    }
+}
+
+@Composable
+private fun EvolvesFromRow(cardEvolvesFrom: String) {
+    HorizontalDivider(
+        Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+    )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(text = "Evolves from:", fontSize = 20.sp)
+        Text(text = cardEvolvesFrom)
     }
 }
 
@@ -151,8 +169,10 @@ private fun DisplayBattleTraits(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = "Battle Traits",
-                    fontSize = 20.sp,
-                    textAlign = TextAlign.Center
+                    fontSize = 26.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    color = Color(R.color.BattleTraits)
                 )
                 HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
                 Row(
@@ -164,27 +184,36 @@ private fun DisplayBattleTraits(
                     Text(text = "Retreat", fontSize = 20.sp)
                 }
                 HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    if (cardWeaknesses != null) {
-                        Text(text = "${cardWeaknesses[0].type} ${cardWeaknesses[0].value}")
-                    } else {
-                        Text(text = "n/a")
-                    }
-                    if (cardResistances != null) {
-                        Text(text = "${cardResistances[0].type} ${cardResistances[0].value}")
-                    } else {
-                        Text(text = "n/a")
-                    }
-                    if (cardRetreat != null) {
-                        Text(text = cardRetreat.toString())
-                    } else {
-                        Text(text = "n/a")
-                    }
-                }
+                BattleTraitsValues(cardWeaknesses, cardResistances, cardRetreat)
             }
+        }
+    }
+}
+
+@Composable
+fun BattleTraitsValues(
+    cardWeaknesses: List<CardWeakRes>?,
+    cardResistances: List<CardWeakRes>?,
+    cardRetreat: Int?
+) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceAround,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        if (cardWeaknesses != null) {
+            WeakResIconRow(cardWeaknesses)
+        } else {
+            Text(text = "n/a")
+        }
+        if (cardResistances != null) {
+            WeakResIconRow(cardResistances)
+        } else {
+            Text(text = "n/a")
+        }
+        if (cardRetreat != null) {
+            RetreatCostIcons(cardRetreat)
+        } else {
+            Text(text = "n/a")
         }
     }
 }
@@ -236,11 +265,7 @@ private fun ShowAttacks(cardAttacks: List<CardAttack>) {
                         modifier = Modifier
                             .fillMaxWidth()
                     ) {
-                        Text(
-                            text = "Cost: ${attack.cost?.size} - ${attack.name}",
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold
-                        )
+                        EnergyIconRow(attack.cost!!)
                         attack.damage?.let {
                             Text(
                                 text = it,
@@ -360,3 +385,11 @@ private fun CardRarityRow(cardRarity: String) {
         Text(text = cardRarity, fontSize = 20.sp)
     }
 }
+
+
+private fun hasBattleTraits(
+    weaknesses: List<CardWeakRes>?,
+    resistances: List<CardWeakRes>?,
+    retreat: Int?
+): Boolean =
+    !weaknesses.isNullOrEmpty() || !resistances.isNullOrEmpty() || (retreat != null)
