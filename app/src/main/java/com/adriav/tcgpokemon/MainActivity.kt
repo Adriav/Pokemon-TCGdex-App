@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     //NavigationWrapper()
                     val singleCardViewModel = hiltViewModel<SingleCardViewModel>()
-                    SingleCardScreen(singleCardViewModel, "gym1-128")
+                    SingleCardScreen(singleCardViewModel, "gym1-78")
                 }
             }
         }

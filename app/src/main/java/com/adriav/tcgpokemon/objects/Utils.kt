@@ -59,7 +59,7 @@ fun CenteredProgressIndicator() {
 
 @SuppressLint("LocalContextResourcesRead")
 @Composable
-fun GetTypeColor(colorName: String): Color {
+fun getTypeColor(colorName: String): Color {
     val context = LocalContext.current
 
     val colorResId = context.resources.getIdentifier(

@@ -28,7 +28,7 @@ import com.adriav.tcgpokemon.R
 import com.adriav.tcgpokemon.models.SingleCardViewModel
 import com.adriav.tcgpokemon.objects.AppHeader
 import com.adriav.tcgpokemon.objects.CenteredProgressIndicator
-import com.adriav.tcgpokemon.objects.GetTypeColor
+import com.adriav.tcgpokemon.objects.getTypeColor
 import net.tcgdex.sdk.Extension
 import net.tcgdex.sdk.Quality
 import net.tcgdex.sdk.models.subs.CardAbility
@@ -103,7 +103,7 @@ fun DisplayCardEffect(cardEffect: String) {
 fun ShowTypeHP(type: String, hp: Int, cardEvolveFrom: String?) {
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = GetTypeColor(type)
+            containerColor = getTypeColor(type)
         ), modifier = Modifier.padding(all = 4.dp)
     ) {
         Column(modifier = Modifier.padding(all = 12.dp)) {
@@ -281,12 +281,15 @@ private fun DisplayCardDetails(
                     CardIllustratorRow(it)
                     HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
                 }
-                cardRarity?.let {
-                    CardRarityRow(it)
+                cardRarity?.let { CardRarityRow(it) }
+                cardEnergyType?.let {
                     HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+                    EnergyTypeRow(it)
                 }
-                cardEnergyType?.let { EnergyTypeRow(it) }
-                cardTrainerType?.let { TrainerTypeRow(it) }
+                cardTrainerType?.let {
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+                    TrainerTypeRow(it)
+                }
             }
         }
     }
