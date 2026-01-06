@@ -37,6 +37,8 @@ class SingleCardViewModel @Inject constructor(
     val cardTypes = _cardTypes
     private val _evolveFrom = MutableLiveData<String?>()
     val evolveFrom = _evolveFrom
+    private val _cardStage = MutableLiveData<String?>()
+    val cardStage = _cardStage
     private val _cardAbilities = MutableLiveData<List<CardAbility>>()
     val cardAbilities = _cardAbilities
     private val _cardAttacks = MutableLiveData<List<CardAttack>>()
@@ -71,6 +73,7 @@ class SingleCardViewModel @Inject constructor(
                 _cardHP.postValue(response.hp)
                 _cardTypes.postValue(response.types)
                 _evolveFrom.postValue(response.evolveFrom)
+                _cardStage.postValue(response.stage)
                 _cardAbilities.postValue(response.abilities)
                 _cardAttacks.postValue(response.attacks)
                 _cardWeaknesses.postValue(response.weaknesses)
@@ -79,6 +82,7 @@ class SingleCardViewModel @Inject constructor(
                 _cardEffect.postValue(response.effect)
                 _trainerType.postValue(response.trainerType)
                 _energyType.postValue(response.energyType)
+                val variants = response.variants
 
             } catch (e: Exception) {
                 e.printStackTrace()

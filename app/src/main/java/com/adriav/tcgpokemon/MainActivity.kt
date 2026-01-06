@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     //NavigationWrapper()
                     val singleCardViewModel = hiltViewModel<SingleCardViewModel>()
-                    SingleCardScreen(singleCardViewModel, "gym1-78")
+                    SingleCardScreen(singleCardViewModel, "me01-050")
                 }
             }
         }
@@ -44,4 +44,5 @@ class MainActivity : ComponentActivity() {
 /*
 * Furret: swsh3-136
 * Brock: gym1-15
+* Mega Manectric ex: me01-050
 * */

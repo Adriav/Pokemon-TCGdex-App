@@ -146,13 +146,17 @@ fun WeakResIconRow(weakRes: List<CardWeakRes>) {
 
 @Composable
 fun RetreatCostIcons(cost: Int) {
-    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)){
-        for (i in 1..cost) {
-            Image(
-                painter = painterResource(R.drawable.colorless),
-                contentDescription = "Colorless",
-                modifier = Modifier.size(25.dp)
-            )
+    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+        if (cost <= 1) {
+            Text(text = "Free")
+        } else {
+            for (i in 1..cost) {
+                Image(
+                    painter = painterResource(R.drawable.colorless),
+                    contentDescription = "Colorless",
+                    modifier = Modifier.size(25.dp)
+                )
+            }
         }
     }
 }

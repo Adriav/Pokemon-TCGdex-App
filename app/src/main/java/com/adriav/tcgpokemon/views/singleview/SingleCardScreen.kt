@@ -1,6 +1,5 @@
 package com.adriav.tcgpokemon.views.singleview
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
@@ -47,8 +45,9 @@ fun SingleCardScreen(viewModel: SingleCardViewModel, cardID: String) { // ID: sw
     val scrollState = rememberScrollState()
     // Energy Type
 
-    // Card Attributes
+    // Card Object
     val card by viewModel.card.observeAsState(null)
+    // Card Attributes
     val cardName by viewModel.cardName.observeAsState("")
     val cardIllustrator by viewModel.cardIllustrator.observeAsState(null)
     val cardRarity by viewModel.cardRarity.observeAsState(null)
@@ -57,6 +56,7 @@ fun SingleCardScreen(viewModel: SingleCardViewModel, cardID: String) { // ID: sw
     val cardHP by viewModel.cardHP.observeAsState(null)
     val cardTypes by viewModel.cardTypes.observeAsState(null)
     val cardEvolveFrom by viewModel.evolveFrom.observeAsState(null)
+    val cardStage by viewModel.cardStage.observeAsState(null)
     val cardAbilities by viewModel.cardAbilities.observeAsState(null)
     val cardAttacks by viewModel.cardAttacks.observeAsState(null)
     val cardWeaknesses by viewModel.cardWeaknesses.observeAsState(null)
@@ -70,6 +70,7 @@ fun SingleCardScreen(viewModel: SingleCardViewModel, cardID: String) { // ID: sw
     viewModel.setCardId(cardID)
     viewModel.loadCard()
 
+    // Display card
     if (card == null) {
         CenteredProgressIndicator()
     } else {
@@ -78,7 +79,7 @@ fun SingleCardScreen(viewModel: SingleCardViewModel, cardID: String) { // ID: sw
             AppHeader(cardName)
             DisplayCardImage(imageURL, cardName)
             HorizontalDivider(Modifier.padding(vertical = 2.dp))
-            cardHP?.let { ShowTypeHP(cardTypes!!, it, cardEvolveFrom) }
+            cardHP?.let { ShowTypeHP(cardTypes!!, it, cardStage, cardEvolveFrom) }
             cardAbilities?.let { ShowAbilities(it) }
             cardAttacks?.let { ShowAttacks(it) }
             DisplayCardDetails(
@@ -114,7 +115,7 @@ fun DisplayCardEffect(cardEffect: String) {
 }
 
 @Composable
-fun ShowTypeHP(types: List<String>, hp: Int, cardEvolveFrom: String?) {
+fun ShowTypeHP(types: List<String>, hp: Int, cardStage: String?, cardEvolveFrom: String?) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = getTypeColor(types[0])
@@ -134,8 +135,32 @@ fun ShowTypeHP(types: List<String>, hp: Int, cardEvolveFrom: String?) {
                     Text(text = "HP", fontSize = 10.sp)
                 }
             }
-            cardEvolveFrom?.let { EvolvesFromRow(it) }
+            if (cardStage != null) {
+                CardStageRow(cardStage)
+            }
+            if (cardEvolveFrom != null) {
+                EvolvesFromRow(cardEvolveFrom)
+            }
         }
+    }
+}
+
+@Composable
+private fun CardStageRow(cardStage: String) {
+    HorizontalDivider(
+        Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+    )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+            .padding(horizontal = 40.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(text = "Stage", fontSize = 20.sp)
+        Text(text = cardStage)
     }
 }
 
@@ -149,7 +174,8 @@ private fun EvolvesFromRow(cardEvolvesFrom: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .padding(vertical = 4.dp)
+            .padding(horizontal = 40.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = "Evolves from:", fontSize = 20.sp)
