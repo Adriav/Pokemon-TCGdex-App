@@ -23,7 +23,9 @@ object RoomModule {
         context,
         TcgDexDatabase::class.java,
         TCGDEX_DATABASE_NAME
-    ).build()
+    )
+        .fallbackToDestructiveMigration()
+        .build()
 
     @Provides
     @Singleton

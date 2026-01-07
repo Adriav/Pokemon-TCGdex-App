@@ -1,25 +1,28 @@
 package com.adriav.tcgpokemon.models
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adriav.tcgpokemon.database.dao.CardDao
+import com.adriav.tcgpokemon.database.entity.CardEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CardItemViewModel @Inject constructor( private val dao: CardDao) : ViewModel() {
-    private val _isCollected = MutableLiveData<Boolean>()
-    val isCollected: LiveData<Boolean> = _isCollected
+class MyCollectionViewModel @Inject constructor(private val dao: CardDao) : ViewModel() {
+    private val _cards = MutableLiveData<List<CardEntity>>()
+    val cards: LiveData<List<CardEntity>> = _cards
 
-    fun getIsCollected(cardID: String) {
+    fun loadCards() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = dao.cardExists(cardID)
-                _isCollected.postValue(response)
+                dao.getAllCards().collect { cards ->
+                    _cards.postValue(cards)
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             }

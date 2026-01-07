@@ -3,9 +3,13 @@ package com.adriav.tcgpokemon.models
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adriav.tcgpokemon.database.dao.CardDao
+import com.adriav.tcgpokemon.database.entity.CardEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import net.tcgdex.sdk.Extension
+import net.tcgdex.sdk.Quality
 import net.tcgdex.sdk.TCGdex
 import net.tcgdex.sdk.models.Card
 import net.tcgdex.sdk.models.subs.CardAbility
@@ -16,11 +20,15 @@ import javax.inject.Inject
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 @HiltViewModel
 class SingleCardViewModel @Inject constructor(
-    private val tcgdex: TCGdex
+    private val tcgdex: TCGdex,
+    private val dao: CardDao
 ) : ViewModel() {
+    private val _isCollected = MutableLiveData<Boolean>()
+    val isCollected = _isCollected
     private val _card = MutableLiveData<Card>()
     val card = _card
     private val _cardID = MutableLiveData<String>()
+    private val _cardCategory = MutableLiveData<String>()
     private val _cardName = MutableLiveData<String>()
     val cardName = _cardName
     private val _cardIllustrator = MutableLiveData<String?>()
@@ -65,6 +73,7 @@ class SingleCardViewModel @Inject constructor(
             try {
                 val response = tcgdex.fetchCard(_cardID.value)
                 _card.postValue(response!!)
+                _cardCategory.postValue(response.category)
                 _cardName.postValue(response.name)
                 _cardIllustrator.postValue(response.illustrator)
                 _cardRarity.postValue(response.rarity)
@@ -82,11 +91,43 @@ class SingleCardViewModel @Inject constructor(
                 _cardEffect.postValue(response.effect)
                 _trainerType.postValue(response.trainerType)
                 _energyType.postValue(response.energyType)
-                val variants = response.variants
-
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+        }
+    }
+
+    fun getIsCollected() {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = dao.cardExists(_cardID.value)
+                _isCollected.postValue(response)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun addToCollection(){
+        viewModelScope.launch(Dispatchers.IO) {
+            val cardEntity = CardEntity(
+                id = _cardID.value,
+                name = _cardName.value,
+                category = _cardCategory.value,
+                rarity = _cardRarity.value,
+                type = _cardTypes.value?.get(0),
+                set = _cardSet.value,
+                imageUrl = card.value!!.getImageUrl(Quality.HIGH, Extension.WEBP)
+            )
+            dao.insertCard(cardEntity)
+            _isCollected.postValue(true)
+        }
+    }
+
+    fun removeFromCollection(){
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.deleteCardById(_cardID.value)
+            _isCollected.postValue(false)
         }
     }
 }

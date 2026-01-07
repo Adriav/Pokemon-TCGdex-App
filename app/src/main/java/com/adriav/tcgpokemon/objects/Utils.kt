@@ -78,7 +78,7 @@ fun getTypeColor(colorName: String): Color {
     return if (colorResId != 0) {
         colorResource(id = colorResId)
     } else {
-        Color.Gray // fallback
+        colorResource(R.color.Colorless)
     }
 }
 

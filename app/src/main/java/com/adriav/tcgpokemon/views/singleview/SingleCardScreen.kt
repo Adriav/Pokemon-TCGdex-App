@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -42,7 +44,11 @@ import net.tcgdex.sdk.models.subs.CardAttack
 import net.tcgdex.sdk.models.subs.CardWeakRes
 
 @Composable
-fun SingleCardScreen(viewModel: SingleCardViewModel, cardID: String, navigateToCardSet: (String) -> Unit) { // ID: swsh3-136
+fun SingleCardScreen(
+    viewModel: SingleCardViewModel,
+    cardID: String,
+    navigateToCardSet: (String) -> Unit
+) { // ID: swsh3-136
     // Scroll Helper
     val scrollState = rememberScrollState()
     // Card Object
@@ -65,6 +71,9 @@ fun SingleCardScreen(viewModel: SingleCardViewModel, cardID: String, navigateToC
     val cardEffect by viewModel.cardEffect.observeAsState(null)
     val cardTrainerType by viewModel.trainerType.observeAsState(null)
     val cardEnergyType by viewModel.energyType.observeAsState(null)
+    // Is Collected
+    val isCollected by viewModel.isCollected.observeAsState(false)
+    viewModel.getIsCollected()
 
     // init card Model
     viewModel.setCardId(cardID)
@@ -99,6 +108,53 @@ fun SingleCardScreen(viewModel: SingleCardViewModel, cardID: String, navigateToC
                 )
             }
             cardEffect?.let { DisplayCardEffect(cardEffect!!) }
+            CollectionButton(cardTypes, isCollected, viewModel)
+        }
+    }
+}
+
+@Composable
+fun CollectionButton(types: List<String>?, isCollected: Boolean, viewModel: SingleCardViewModel) {
+    val typeColor = types?.get(0) ?: "Colorless"
+    val addColors = ButtonColors(
+        containerColor = getTypeColor(typeColor),
+        disabledContentColor = Color.Unspecified,
+        disabledContainerColor = Color.Unspecified,
+        contentColor = Color.White
+    )
+    val removeColors = ButtonColors(
+        containerColor = Color.Red,
+        disabledContentColor = Color.Unspecified,
+        disabledContainerColor = Color.Black,
+        contentColor = Color.White
+    )
+    if (isCollected) {
+        Button(
+            onClick = { viewModel.removeFromCollection() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(all = 8.dp),
+            colors = removeColors
+        ) {
+            Text(
+                text = "Remove from collection",
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    } else {
+        Button(
+            onClick = { viewModel.addToCollection() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(all = 8.dp),
+            colors = addColors
+        ) {
+            Text(
+                text = "Add to collection",
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }
@@ -376,7 +432,7 @@ private fun CardSetRow(cardSet: String, navigateToCardSet: (String) -> Unit) {
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(text = "Set", fontSize = 20.sp)
-        Box (modifier = Modifier.clickable { navigateToCardSet(cardSet) }) {
+        Box(modifier = Modifier.clickable { navigateToCardSet(cardSet) }) {
             Text(text = cardSet, fontSize = 20.sp, color = Color(0xFF237DB3))
         }
     }

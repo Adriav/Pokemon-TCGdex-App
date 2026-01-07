@@ -1,17 +1,14 @@
 package com.adriav.tcgpokemon.navigation
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.adriav.tcgpokemon.models.AllSeriesViewModel
 import com.adriav.tcgpokemon.models.AllSetsViewModel
-import com.adriav.tcgpokemon.models.CardItemViewModel
 import com.adriav.tcgpokemon.models.HomeViewModel
+import com.adriav.tcgpokemon.models.MyCollectionViewModel
 import com.adriav.tcgpokemon.models.SingleCardViewModel
 import com.adriav.tcgpokemon.models.SingleSerieViewModel
 import com.adriav.tcgpokemon.models.SingleSetViewModel
@@ -22,6 +19,7 @@ import com.adriav.tcgpokemon.navigation.Routes.SingleCard
 import com.adriav.tcgpokemon.navigation.Routes.SingleSerie
 import com.adriav.tcgpokemon.navigation.Routes.SingleSet
 import com.adriav.tcgpokemon.views.HomeScreen
+import com.adriav.tcgpokemon.views.MyCollectionScreen
 import com.adriav.tcgpokemon.views.allview.AllSeriesScreen
 import com.adriav.tcgpokemon.views.allview.AllSetsScreen
 import com.adriav.tcgpokemon.views.singleview.SingleCardScreen
@@ -40,6 +38,7 @@ fun NavigationWrapper() {
                 HomeScreen(
                     navigateToAllSets = { backStack.add(AllSets) },
                     navigateToAllSeries = { backStack.add(AllSeries) },
+                    navigateToMyCollection = {backStack.add(Routes.MyCollection)},
                     viewModel = homeViewModel
                 )
             }
@@ -67,10 +66,8 @@ fun NavigationWrapper() {
             }
             entry<SingleSet> { args ->
                 val singleSetViewModel = hiltViewModel<SingleSetViewModel>()
-                val cardItemViewModel = hiltViewModel<CardItemViewModel>()
                 SingleSetScreen(
                     viewModel = singleSetViewModel,
-                    cardItemViewModel = cardItemViewModel,
                     setID = args.setID
                 ) { cardID ->
                     backStack.add(SingleCard(cardID))
@@ -81,6 +78,10 @@ fun NavigationWrapper() {
                 SingleCardScreen(singleCardViewModel, args.cardID, navigateToCardSet = { setID ->
                     backStack.add(SingleSet(setID))
                 })
+            }
+            entry<Routes.MyCollection> {
+                val myCollectionViewModel = hiltViewModel<MyCollectionViewModel>()
+                MyCollectionScreen(viewModel = myCollectionViewModel)
             }
         }
     )

@@ -8,8 +8,9 @@ import androidx.room.PrimaryKey
 data class CardEntity(
     @PrimaryKey val id: String,
     @ColumnInfo(name = "name") val name: String,
+    @ColumnInfo(name = "category") val category: String,
     @ColumnInfo(name = "rarity") val rarity: String,
-    @ColumnInfo(name = "type") val types: String,
+    @ColumnInfo(name = "type") val type: String?,
     @ColumnInfo(name = "set") val set: String,
     @ColumnInfo(name = "image_url") val imageUrl: String,
 
