@@ -21,8 +21,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.adriav.tcgpokemon.R
+import com.adriav.tcgpokemon.models.CardItemViewModel
 import com.adriav.tcgpokemon.models.SingleSetViewModel
 import com.adriav.tcgpokemon.objects.CenteredProgressIndicator
 import com.adriav.tcgpokemon.views.items.CardItemView
@@ -34,6 +36,7 @@ import net.tcgdex.sdk.models.Set
 fun SingleSetScreen(
     viewModel: SingleSetViewModel,
     setID: String,
+    cardItemViewModel: CardItemViewModel,
     navigateToCard: (String) -> Unit
 ) {
     val set by viewModel.set.observeAsState(null)
@@ -51,7 +54,7 @@ fun SingleSetScreen(
                 modifier =
                     Modifier.padding(vertical = 8.dp)
             )
-            CardsItems(cards!!, navigateToCard)
+            CardsItems(cards!!, cardItemViewModel, navigateToCard)
         }
     }
 }
@@ -129,14 +132,14 @@ fun SetHeader(set: Set) {
 }
 
 @Composable
-fun CardsItems(cards: List<CardResume>, navigateToCard: (String) -> Unit) {
+fun CardsItems(cards: List<CardResume>, cardItemViewModel: CardItemViewModel, navigateToCard: (String) -> Unit) {
     LazyColumn {
         items(cards.size) { index ->
             Box(
                 modifier = Modifier
                     .padding(vertical = 16.dp)
                     .clickable { navigateToCard(cards[index].id) }) {
-                CardItemView(cards[index], index + 1)
+                CardItemView(cards[index], index + 1, cardItemViewModel)
             }
         }
     }

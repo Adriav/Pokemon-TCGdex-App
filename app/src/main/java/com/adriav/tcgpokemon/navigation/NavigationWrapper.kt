@@ -10,6 +10,7 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.adriav.tcgpokemon.models.AllSeriesViewModel
 import com.adriav.tcgpokemon.models.AllSetsViewModel
+import com.adriav.tcgpokemon.models.CardItemViewModel
 import com.adriav.tcgpokemon.models.HomeViewModel
 import com.adriav.tcgpokemon.models.SingleCardViewModel
 import com.adriav.tcgpokemon.models.SingleSerieViewModel
@@ -44,13 +45,13 @@ fun NavigationWrapper() {
             }
             entry<AllSeries> {
                 val allSeriesViewModel = hiltViewModel<AllSeriesViewModel>()
-                AllSeriesScreen (viewModel = allSeriesViewModel) { serieID ->
+                AllSeriesScreen(viewModel = allSeriesViewModel) { serieID ->
                     backStack.add(SingleSerie(serieID))
                 }
             }
             entry<AllSets> {
                 val allSetsViewModel = hiltViewModel<AllSetsViewModel>()
-                AllSetsScreen(viewModel = allSetsViewModel) {setID ->
+                AllSetsScreen(viewModel = allSetsViewModel) { setID ->
                     backStack.add(SingleSet(setID))
                 }
             }
@@ -64,15 +65,22 @@ fun NavigationWrapper() {
                     }
                 )
             }
-            entry<SingleSet> {args ->
+            entry<SingleSet> { args ->
                 val singleSetViewModel = hiltViewModel<SingleSetViewModel>()
-                SingleSetScreen(viewModel = singleSetViewModel, setID = args.setID) { cardID ->
+                val cardItemViewModel = hiltViewModel<CardItemViewModel>()
+                SingleSetScreen(
+                    viewModel = singleSetViewModel,
+                    cardItemViewModel = cardItemViewModel,
+                    setID = args.setID
+                ) { cardID ->
                     backStack.add(SingleCard(cardID))
                 }
             }
             entry<SingleCard> { args ->
                 val singleCardViewModel = hiltViewModel<SingleCardViewModel>()
-                SingleCardScreen(singleCardViewModel, args.cardID)
+                SingleCardScreen(singleCardViewModel, args.cardID, navigateToCardSet = { setID ->
+                    backStack.add(SingleSet(setID))
+                })
             }
         }
     )

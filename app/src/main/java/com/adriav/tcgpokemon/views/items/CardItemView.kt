@@ -12,6 +12,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -20,12 +22,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.adriav.tcgpokemon.R
+import com.adriav.tcgpokemon.models.CardItemViewModel
 import net.tcgdex.sdk.Extension
 import net.tcgdex.sdk.Quality
 import net.tcgdex.sdk.models.CardResume
 
 @Composable
-fun CardItemView(cardResume: CardResume, index: Int) {
+fun CardItemView(cardResume: CardResume, index: Int, viewModel: CardItemViewModel) {
+    val collected: Boolean by viewModel.isCollected.observeAsState(false)
     Box(
         modifier = Modifier
             .fillMaxWidth(),
@@ -42,11 +46,11 @@ fun CardItemView(cardResume: CardResume, index: Int) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(text = "$index - ${cardResume.name}", fontWeight = FontWeight.Bold)
-                    Icon(painterResource(R.drawable.baseline_check_24), contentDescription = "a")
+                    if (collected) Icon(painterResource(R.drawable.baseline_check_24), contentDescription = "a")
                 }
                 val cardImage =
-                    cardResume.getImageUrl(Quality.HIGH, Extension.WEBP)
-                        .replace("HIGH", "high")
+                    cardResume.getImageUrl(Quality.LOW, Extension.WEBP)
+                        .replace("LOW", "low")
                 AsyncImage(
                     model = cardImage,
                     contentDescription = cardResume.id,

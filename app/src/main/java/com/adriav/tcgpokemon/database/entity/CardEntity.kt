@@ -9,7 +9,7 @@ data class CardEntity(
     @PrimaryKey val id: String,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "rarity") val rarity: String,
-    @ColumnInfo(name = "types") val types: List<String>,
+    @ColumnInfo(name = "type") val types: String,
     @ColumnInfo(name = "set") val set: String,
     @ColumnInfo(name = "image_url") val imageUrl: String,
 

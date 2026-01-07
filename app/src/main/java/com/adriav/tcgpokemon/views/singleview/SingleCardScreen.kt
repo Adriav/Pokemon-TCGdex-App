@@ -1,5 +1,6 @@
 package com.adriav.tcgpokemon.views.singleview
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -40,11 +42,9 @@ import net.tcgdex.sdk.models.subs.CardAttack
 import net.tcgdex.sdk.models.subs.CardWeakRes
 
 @Composable
-fun SingleCardScreen(viewModel: SingleCardViewModel, cardID: String) { // ID: swsh3-136
+fun SingleCardScreen(viewModel: SingleCardViewModel, cardID: String, navigateToCardSet: (String) -> Unit) { // ID: swsh3-136
     // Scroll Helper
     val scrollState = rememberScrollState()
-    // Energy Type
-
     // Card Object
     val card by viewModel.card.observeAsState(null)
     // Card Attributes
@@ -89,6 +89,7 @@ fun SingleCardScreen(viewModel: SingleCardViewModel, cardID: String) { // ID: sw
                 cardRarity,
                 cardEnergyType,
                 cardTrainerType,
+                navigateToCardSet
             )
             if (hasBattleTraits(cardWeaknesses, cardResistances, cardRetreat)) {
                 DisplayBattleTraits(
@@ -198,7 +199,7 @@ private fun DisplayBattleTraits(
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
-                    color = Color(R.color.BattleTraits)
+                    color = colorResource(R.color.BattleTraits)
                 )
                 HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
                 Row(
@@ -262,13 +263,12 @@ private fun DisplayCardImage(imageURL: String, cardName: String) {
 
 @Composable
 private fun ShowAbilities(cardAbilities: List<CardAbility>) {
-    Text(text = "HABILIDADES!", modifier = Modifier.padding(vertical = 4.dp))
     cardAbilities.forEach { ability ->
         Card(modifier = Modifier.padding(all = 8.dp)) {
             Box(modifier = Modifier.padding(all = 16.dp)) {
                 Column {
                     Text(
-                        text = "Cost: ${ability.type} - ${ability.name}",
+                        text = ability.name,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -315,13 +315,14 @@ private fun DisplayCardDetails(
     cardIllustrator: String?,
     cardRarity: String?,
     cardEnergyType: String?,
-    cardTrainerType: String?
+    cardTrainerType: String?,
+    navigateToCardSet: (String) -> Unit
 ) {
     Card(modifier = Modifier.padding(all = 8.dp)) {
         Box(modifier = Modifier.padding(all = 16.dp)) {
             Column {
                 cardSet?.let {
-                    CardSetRow(it)
+                    CardSetRow(it, navigateToCardSet)
                     HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
                 }
                 cardDexID?.let {
@@ -369,13 +370,15 @@ fun EnergyTypeRow(energyType: String) {
 }
 
 @Composable
-private fun CardSetRow(cardSet: String) {
+private fun CardSetRow(cardSet: String, navigateToCardSet: (String) -> Unit) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(text = "Set", fontSize = 20.sp)
-        Text(text = cardSet, fontSize = 20.sp)
+        Box (modifier = Modifier.clickable { navigateToCardSet(cardSet) }) {
+            Text(text = cardSet, fontSize = 20.sp, color = Color(0xFF237DB3))
+        }
     }
 }
 

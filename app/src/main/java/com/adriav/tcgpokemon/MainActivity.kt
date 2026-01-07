@@ -32,9 +32,9 @@ class MainActivity : ComponentActivity() {
                         .padding(bottom = 32.dp)
                         .padding(top = 6.dp)
                 ) {
-                    //NavigationWrapper()
-                    val singleCardViewModel = hiltViewModel<SingleCardViewModel>()
-                    SingleCardScreen(singleCardViewModel, "me01-050")
+                     NavigationWrapper()
+//                    val singleCardViewModel = hiltViewModel<SingleCardViewModel>()
+//                    SingleCardScreen(singleCardViewModel, "base1-1")
                 }
             }
         }
@@ -45,4 +45,5 @@ class MainActivity : ComponentActivity() {
 * Furret: swsh3-136
 * Brock: gym1-15
 * Mega Manectric ex: me01-050
+* Alakazam: base1-1
 * */
