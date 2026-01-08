@@ -88,14 +88,6 @@ class SearchCardViewModel @Inject constructor(private val tcgdex: TCGdex) : View
                 card.name.contains(query, ignoreCase = true)
             }
             _uiState.value = SearchCardUiState.Success(result.toList())
-
-            /*
-            val result = tcgdex.fetchCards()
-            result!!.filter { card ->
-                card.name.contains(query, ignoreCase = true)
-            }
-            _uiState.value = SearchCardUiState.Success(result.toList())
-            */
         } catch (e: Exception) {
             e.printStackTrace()
             _uiState.value = SearchCardUiState.Error(e.message?:  "Error retrieving cards")

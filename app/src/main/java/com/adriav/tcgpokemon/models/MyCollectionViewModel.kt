@@ -28,16 +28,6 @@ class MyCollectionViewModel @Inject constructor(private val dao: CardDao) : View
         }
     }
 
-    val filteredCollectionOld = combine(collection, selectedEnergy) { cards, energyType ->
-        if (energyType == null) {
-            cards
-        } else {
-            cards.filter { card ->
-                card.type!!.equals(energyType.apiName, ignoreCase = true)
-            }
-        }
-    }
-
     fun selectEnergy(energyType: EnergyType?) {
         _selectedEnergy.value = energyType
     }
