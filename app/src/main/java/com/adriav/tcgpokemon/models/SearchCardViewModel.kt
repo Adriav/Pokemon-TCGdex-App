@@ -39,7 +39,7 @@ class SearchCardViewModel @Inject constructor(private val tcgdex: TCGdex) : View
                     tcgdex.fetchCards()
                 }
                 allCards = result!!.asList()
-                _uiState.value = SearchCardUiState.Loading
+                _uiState.value = SearchCardUiState.Idle
             } catch (e: Exception) {
                 e.printStackTrace()
                 _uiState.value = SearchCardUiState.Error(
@@ -72,6 +72,10 @@ class SearchCardViewModel @Inject constructor(private val tcgdex: TCGdex) : View
             card.name.normalize().contains(normalizedQuery, ignoreCase = true)
         }
 
+        if(filtered.isEmpty()) {
+            _uiState.value = SearchCardUiState.Error("No cards found")
+            return
+        }
         _uiState.value = SearchCardUiState.Success(filtered)
     }
 
