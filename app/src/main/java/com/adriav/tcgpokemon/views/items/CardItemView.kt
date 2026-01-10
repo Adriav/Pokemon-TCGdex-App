@@ -1,5 +1,6 @@
 package com.adriav.tcgpokemon.views.items
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.adriav.tcgpokemon.R
@@ -30,22 +34,34 @@ fun CardItemView(cardResume: CardResume, index: Int? = null) {
             .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
-        Card {
+        Card(
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        ) {
             Column(
                 modifier = Modifier
                     .padding(vertical = 8.dp)
-                    .padding(horizontal = 8.dp)
             ) {
-                Row (
+                Row(
                     modifier = Modifier
                         .width(300.dp)
                         .padding(bottom = 4.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     if (index != null) {
-                        Text(text = "$index - ${cardResume.name}", fontWeight = FontWeight.Bold)
+                        Text(
+                            text = "$index - ${cardResume.name}",
+                            modifier = Modifier.fillMaxWidth(),
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center
+                        )
                     } else {
-                        Text(text = cardResume.name, fontWeight = FontWeight.Bold)
+                        Text(
+                            text = cardResume.name,
+                            modifier = Modifier.fillMaxWidth(),
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center
+                        )
                     }
                 }
                 val cardImage =
@@ -56,8 +72,7 @@ fun CardItemView(cardResume: CardResume, index: Int? = null) {
                     contentDescription = cardResume.id,
                     modifier = Modifier
                         .width(300.dp)
-                        .height(400.dp)
-                        .padding(bottom = 8.dp),
+                        .height(400.dp),
                     contentScale = ContentScale.Fit,
                     placeholder = painterResource(R.drawable.loading_progress_icon),
                     error = painterResource(R.drawable.card_back)

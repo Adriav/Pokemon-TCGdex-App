@@ -21,4 +21,6 @@
     <color name="Water">#FF18AFE8</color>
     <color name="BattleTraits">#FFb90e35</color>
 
+    <color name="Outline">#FFece6f0</color>
+
 </resources>

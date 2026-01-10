@@ -6,17 +6,24 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+private val LightColorScheme = lightColorScheme(
+    primary = LightPrimary,//
+    secondary = PurpleGrey40,
+    tertiary = Pink40,
+    background = LightBackground,
+    surface = LightSurface,
+    surfaceContainer = LightSurface
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+private val DarkColorScheme = darkColorScheme(
+    primary = DarkPrimary,
+    secondary = PurpleGrey80,
+    tertiary = Pink80,
+    background = DarkBackground,
+    surface = DarkSurface,
+    surfaceContainer = DarkSurface
 )
+
 
 @Composable
 fun TCGPokemonTheme(
