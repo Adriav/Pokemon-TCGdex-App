@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -134,11 +135,12 @@ fun CollectionButton(types: List<String>?, isCollected: Boolean, viewModel: Sing
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(all = 8.dp),
-            colors = removeColors
+            colors = removeColors,
+            shape = RoundedCornerShape(10.dp)
         ) {
             Text(
                 text = "Remove from collection",
-                fontSize = 22.sp,
+                fontSize = 25.sp,
                 fontWeight = FontWeight.Bold
             )
         }
@@ -148,7 +150,8 @@ fun CollectionButton(types: List<String>?, isCollected: Boolean, viewModel: Sing
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(all = 8.dp),
-            colors = addColors
+            colors = addColors,
+            shape = RoundedCornerShape(10.dp)
         ) {
             Text(
                 text = "Add to collection",
@@ -161,9 +164,13 @@ fun CollectionButton(types: List<String>?, isCollected: Boolean, viewModel: Sing
 
 @Composable
 fun DisplayCardEffect(cardEffect: String) {
-    Card(modifier = Modifier.padding(all = 16.dp)) {
+    Card(
+        modifier = Modifier
+            .padding(all = 10.dp)
+            .fillMaxWidth()
+    ) {
         Column(Modifier.padding(all = 12.dp)) {
-            Text(text = "Effect", fontSize = 20.sp)
+            Text(text = "Effect", fontSize = 20.sp, modifier = Modifier.fillMaxWidth())
             HorizontalDivider(Modifier.padding(vertical = 4.dp))
             Text(text = cardEffect)
         }

@@ -34,6 +34,46 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
+// - - - - - [ OBJECTS ] - - - - -
+sealed class EnergyType(
+    val apiName: String,
+    @param:DrawableRes val icon: Int
+) {
+    object Colorless : EnergyType("Colorless", R.drawable.colorless)
+    object Darkness : EnergyType("Darkness", R.drawable.darkness)
+    object Fairy : EnergyType("Fairy", R.drawable.fairy)
+    object Water : EnergyType("Water", R.drawable.water)
+    object Fire : EnergyType("Fire", R.drawable.fire)
+    object Grass : EnergyType("Grass", R.drawable.grass)
+    object Lightning : EnergyType("Lightning", R.drawable.lightning)
+    object Metal : EnergyType("Metal", R.drawable.metal)
+    object Psychic : EnergyType("Psychic", R.drawable.psychic)
+    object Fighting : EnergyType("Fighting", R.drawable.fighting)
+    object Dragon : EnergyType("Dragon", R.drawable.dragon)
+
+    companion object {
+        fun fromApi(value: String): EnergyType =
+            listOf(
+                Colorless, Darkness, Fairy, Water, Fire,
+                Grass, Lightning, Metal, Psychic, Fighting, Dragon
+            ).firstOrNull { it.apiName.equals(value, true) }
+                ?: Colorless
+    }
+}
+
+
+enum class CardCategory {
+    TRAINER,
+    ENERGY
+}
+
+sealed class CardFilter {
+    data class Energy(val energyType: EnergyType) : CardFilter()
+    data class Category(val category: CardCategory) : CardFilter()
+}
+
+// - - - - - - [ FUNCTIONS / COMPONENTS ] - - - - - -
+
 @Composable
 fun AppHeader(text: String = "Todas las ...") {
     Box(
@@ -84,32 +124,6 @@ fun getTypeColor(colorName: String): Color {
         colorResource(id = colorResId)
     } else {
         colorResource(R.color.Colorless)
-    }
-}
-
-sealed class EnergyType(
-    val apiName: String,
-    @param:DrawableRes val icon: Int
-) {
-    object Colorless : EnergyType("Colorless", R.drawable.colorless)
-    object Darkness : EnergyType("Darkness", R.drawable.darkness)
-    object Fairy : EnergyType("Fairy", R.drawable.fairy)
-    object Water : EnergyType("Water", R.drawable.water)
-    object Fire : EnergyType("Fire", R.drawable.fire)
-    object Grass : EnergyType("Grass", R.drawable.grass)
-    object Lightning : EnergyType("Lightning", R.drawable.lightning)
-    object Metal : EnergyType("Metal", R.drawable.metal)
-    object Psychic : EnergyType("Psychic", R.drawable.psychic)
-    object Fighting : EnergyType("Fighting", R.drawable.fighting)
-    object Dragon : EnergyType("Dragon", R.drawable.dragon)
-
-    companion object {
-        fun fromApi(value: String): EnergyType =
-            listOf(
-                Colorless, Darkness, Fairy, Water, Fire,
-                Grass, Lightning, Metal, Psychic, Fighting, Dragon
-            ).firstOrNull { it.apiName.equals(value, true) }
-                ?: Colorless
     }
 }
 

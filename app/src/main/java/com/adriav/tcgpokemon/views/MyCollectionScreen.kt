@@ -20,6 +20,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bolt
+import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
@@ -28,6 +30,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SearchBar
@@ -49,6 +52,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.adriav.tcgpokemon.models.MyCollectionViewModel
+import com.adriav.tcgpokemon.objects.CardCategory
+import com.adriav.tcgpokemon.objects.CardFilter
 import com.adriav.tcgpokemon.objects.EnergyIcon
 import com.adriav.tcgpokemon.objects.EnergyType
 import com.adriav.tcgpokemon.objects.normalize
@@ -62,8 +67,7 @@ fun MyCollectionScreen(
     val cards by viewModel.filteredCollection
         .collectAsState(initial = emptyList())
 
-    val selectedEnergy by viewModel.selectedEnergy
-        .collectAsState()
+    val selectedFilter by viewModel.selectedFilter.collectAsState()
 
     val searchQuery by viewModel.searchQuery.collectAsState()
     val selectedSet by viewModel.selectedSet.collectAsState()
@@ -79,7 +83,7 @@ fun MyCollectionScreen(
             selectedSet = selectedSet,
             onSetSelected = viewModel::selectSet
         )
-        EnergyFilterRow(selectedEnergy, viewModel::selectEnergy)
+        CardFilterRow(selectedFilter, viewModel::setFilter)
         Spacer(modifier = Modifier.height(8.dp))
         if (cards.isEmpty()) {
             ShowEmptyCollection()
@@ -157,7 +161,7 @@ fun ShowEmptyCollection() {
 }
 
 @Composable
-fun EnergyFilterRow(selectedEnergy: EnergyType?, onEnergySelected: (EnergyType?) -> Unit) {
+fun CardFilterRow(selectedFilter: CardFilter?, onFilterSelected: (CardFilter?) -> Unit) {
     val energies = listOf(
         EnergyType.Colorless,
         EnergyType.Darkness,
@@ -178,22 +182,58 @@ fun EnergyFilterRow(selectedEnergy: EnergyType?, onEnergySelected: (EnergyType?)
             .horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
+        // ALL (No filter applied)
         FilterChip(
-            selected = selectedEnergy == null,
-            onClick = { onEnergySelected(null) },
+            selected = selectedFilter == null,
+            onClick = { onFilterSelected(null) },
             label = { Text(text = "All") }
         )
 
+        // Energies
         energies.forEach { energy ->
             FilterChip(
-                selected = selectedEnergy == energy,
-                onClick = { onEnergySelected(energy) },
+                selected = selectedFilter is CardFilter.Energy && selectedFilter.energyType == energy,
+                onClick = { onFilterSelected(CardFilter.Energy(energy)) },
                 leadingIcon = {
                     EnergyIcon(energyType = energy.apiName, modifier = Modifier.height(20.dp))
                 },
                 label = { Text(text = energy.apiName) }
             )
         }
+
+        // Trainer Category
+        FilterChip(
+            selected = selectedFilter is CardFilter.Category &&
+                    selectedFilter.category == CardCategory.TRAINER,
+            onClick = {
+                onFilterSelected(CardFilter.Category(CardCategory.TRAINER))
+            },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.School,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            },
+            label = { Text("Trainer") }
+        )
+
+        // Energy Category
+        FilterChip(
+            selected = selectedFilter is CardFilter.Category &&
+                    selectedFilter.category == CardCategory.ENERGY,
+            onClick = {
+                onFilterSelected(CardFilter.Category(CardCategory.ENERGY))
+            },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Bolt,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            },
+            label = { Text("Energy") }
+        )
     }
 }
 
