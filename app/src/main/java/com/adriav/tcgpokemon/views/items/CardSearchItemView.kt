@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -32,7 +33,7 @@ fun CardSearchItemView(cardResume: CardResume) {
             cardResume.getImageUrl(Quality.LOW, Extension.WEBP)
                 .replace("LOW", "low")
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = cardResume.name)
+            Text(text = cardResume.name, modifier = Modifier.padding(horizontal = 8.dp))
             AsyncImage(
                 model = cardImage,
                 contentDescription = cardResume.name,
