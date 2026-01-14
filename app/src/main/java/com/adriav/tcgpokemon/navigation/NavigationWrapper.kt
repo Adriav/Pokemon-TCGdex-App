@@ -1,6 +1,5 @@
 package com.adriav.tcgpokemon.navigation
 
-import android.util.Log
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
@@ -123,8 +122,6 @@ fun NavigationWrapper(isDarkMode: Boolean, paddingValues: PaddingValues, onToggl
             entry<Routes.CardSearchResult> {
                 val searchCardViewModel = hiltViewModel<SearchCardViewModel>()
                 SearchCardScreen(viewModel = searchCardViewModel) { cardID ->
-                    val clickedAt: Long = System.currentTimeMillis()
-                    Log.i("card", "$clickedAt: $cardID")
                     backStack.add(SingleCard(cardID))
                 }
             }

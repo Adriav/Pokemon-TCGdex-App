@@ -89,7 +89,7 @@ fun SingleCardScreen(
             AppHeader(cardName)
             DisplayCardImage(imageURL, cardName)
             HorizontalDivider(Modifier.padding(vertical = 2.dp))
-            cardHP?.let { ShowTypeHP(cardTypes!!, it, cardStage, cardEvolveFrom) }
+            cardHP?.let { ShowTypeHP(cardTypes, it, cardStage, cardEvolveFrom) }
             cardAbilities?.let { ShowAbilities(it) }
             cardAttacks?.let { ShowAttacks(it) }
             DisplayCardDetails(
@@ -163,7 +163,7 @@ fun CollectionButton(types: List<String>?, isCollected: Boolean, viewModel: Sing
 }
 
 @Composable
-fun DisplayCardEffect(cardEffect: String) {
+fun DisplayCardEffect(cardEffect: String?) {
     Card(
         modifier = Modifier
             .padding(all = 10.dp)
@@ -172,17 +172,18 @@ fun DisplayCardEffect(cardEffect: String) {
         Column(Modifier.padding(all = 12.dp)) {
             Text(text = "Effect", fontSize = 20.sp, modifier = Modifier.fillMaxWidth())
             HorizontalDivider(Modifier.padding(vertical = 4.dp))
-            Text(text = cardEffect)
+            Text(text = cardEffect ?: "")
         }
     }
 
 }
 
 @Composable
-fun ShowTypeHP(types: List<String>, hp: Int, cardStage: String?, cardEvolveFrom: String?) {
+fun ShowTypeHP(types: List<String>?, hp: Int, cardStage: String?, cardEvolveFrom: String?) {
+    val type = types?.get(0) ?: "Colorless"
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = getTypeColor(types[0])
+            containerColor = getTypeColor(type)
         ), modifier = Modifier.padding(all = 4.dp)
     ) {
         Column(modifier = Modifier.padding(all = 8.dp)) {
@@ -193,7 +194,7 @@ fun ShowTypeHP(types: List<String>, hp: Int, cardStage: String?, cardEvolveFrom:
                     .padding(horizontal = 40.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                EnergyIconRow(types)
+                types?.let { EnergyIconRow(it) }
                 Row {
                     Text(text = "$hp", fontSize = 20.sp)
                     Text(text = "HP", fontSize = 10.sp)
@@ -347,26 +348,32 @@ private fun ShowAbilities(cardAbilities: List<CardAbility>) {
 @Composable
 private fun ShowAttacks(cardAttacks: List<CardAttack>) {
     cardAttacks.forEach { attack ->
-        Card(modifier = Modifier.padding(all = 8.dp)) {
-            Box(modifier = Modifier.padding(all = 16.dp)) {
-                Column {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        EnergyIconRow(attack.cost?: emptyList())
-                        Text(text = attack.name, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                        attack.damage?.let {
+        if (attack.name != null || attack.effect != null) {
+            Card(modifier = Modifier.padding(all = 8.dp)) {
+                Box(modifier = Modifier.padding(all = 16.dp)) {
+                    Column {
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            EnergyIconRow(attack.cost ?: emptyList())
                             Text(
-                                text = it,
-                                fontSize = 24.sp,
+                                text = attack.name ?: "",
+                                fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold
                             )
+                            attack.damage?.let {
+                                Text(
+                                    text = it,
+                                    fontSize = 24.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
                         }
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+                        attack.effect?.let { Text(text = it, fontSize = 18.sp) }
                     }
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
-                    attack.effect?.let { Text(text = it, fontSize = 18.sp) }
                 }
             }
         }
