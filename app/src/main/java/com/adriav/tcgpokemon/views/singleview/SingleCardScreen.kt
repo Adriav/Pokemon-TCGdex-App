@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -48,7 +49,7 @@ fun SingleCardScreen(
     viewModel: SingleCardViewModel,
     cardID: String,
     navigateToCardSet: (String) -> Unit
-) { // ID: swsh3-136
+) {
     // Scroll Helper
     val scrollState = rememberScrollState()
     // Card Object
@@ -88,7 +89,7 @@ fun SingleCardScreen(
             AppHeader(cardName)
             DisplayCardImage(imageURL, cardName)
             HorizontalDivider(Modifier.padding(vertical = 2.dp))
-            cardHP?.let { ShowTypeHP(cardTypes!!, it, cardStage, cardEvolveFrom) }
+            cardHP?.let { ShowTypeHP(cardTypes, it, cardStage, cardEvolveFrom) }
             cardAbilities?.let { ShowAbilities(it) }
             cardAttacks?.let { ShowAttacks(it) }
             DisplayCardDetails(
@@ -134,11 +135,12 @@ fun CollectionButton(types: List<String>?, isCollected: Boolean, viewModel: Sing
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(all = 8.dp),
-            colors = removeColors
+            colors = removeColors,
+            shape = RoundedCornerShape(10.dp)
         ) {
             Text(
                 text = "Remove from collection",
-                fontSize = 28.sp,
+                fontSize = 25.sp,
                 fontWeight = FontWeight.Bold
             )
         }
@@ -148,7 +150,8 @@ fun CollectionButton(types: List<String>?, isCollected: Boolean, viewModel: Sing
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(all = 8.dp),
-            colors = addColors
+            colors = addColors,
+            shape = RoundedCornerShape(10.dp)
         ) {
             Text(
                 text = "Add to collection",
@@ -160,22 +163,27 @@ fun CollectionButton(types: List<String>?, isCollected: Boolean, viewModel: Sing
 }
 
 @Composable
-fun DisplayCardEffect(cardEffect: String) {
-    Card(modifier = Modifier.padding(all = 16.dp)) {
+fun DisplayCardEffect(cardEffect: String?) {
+    Card(
+        modifier = Modifier
+            .padding(all = 10.dp)
+            .fillMaxWidth()
+    ) {
         Column(Modifier.padding(all = 12.dp)) {
-            Text(text = "Effect", fontSize = 20.sp)
+            Text(text = "Effect", fontSize = 20.sp, modifier = Modifier.fillMaxWidth())
             HorizontalDivider(Modifier.padding(vertical = 4.dp))
-            Text(text = cardEffect)
+            Text(text = cardEffect ?: "")
         }
     }
 
 }
 
 @Composable
-fun ShowTypeHP(types: List<String>, hp: Int, cardStage: String?, cardEvolveFrom: String?) {
+fun ShowTypeHP(types: List<String>?, hp: Int, cardStage: String?, cardEvolveFrom: String?) {
+    val type = types?.get(0) ?: "Colorless"
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = getTypeColor(types[0])
+            containerColor = getTypeColor(type)
         ), modifier = Modifier.padding(all = 4.dp)
     ) {
         Column(modifier = Modifier.padding(all = 8.dp)) {
@@ -186,7 +194,7 @@ fun ShowTypeHP(types: List<String>, hp: Int, cardStage: String?, cardEvolveFrom:
                     .padding(horizontal = 40.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                EnergyIconRow(types)
+                types?.let { EnergyIconRow(it) }
                 Row {
                     Text(text = "$hp", fontSize = 20.sp)
                     Text(text = "HP", fontSize = 10.sp)
@@ -286,17 +294,17 @@ fun BattleTraitsValues(
         if (cardWeaknesses != null) {
             WeakResIconRow(cardWeaknesses)
         } else {
-            Text(text = "n/a")
+            Text(text = "None")
         }
         if (cardResistances != null) {
             WeakResIconRow(cardResistances)
         } else {
-            Text(text = "n/a")
+            Text(text = "None")
         }
         if (cardRetreat != null) {
             RetreatCostIcons(cardRetreat)
         } else {
-            Text(text = "n/a")
+            Text(text = "Free")
         }
     }
 }
@@ -313,7 +321,7 @@ private fun DisplayCardImage(imageURL: String, cardName: String) {
             .height(450.dp),
         contentScale = ContentScale.Fit,
         placeholder = painterResource(R.drawable.loading_progress_icon),
-        error = painterResource(R.drawable.verror_code_vector_icon)
+        error = painterResource(R.drawable.card_back)
     )
 }
 
@@ -340,26 +348,32 @@ private fun ShowAbilities(cardAbilities: List<CardAbility>) {
 @Composable
 private fun ShowAttacks(cardAttacks: List<CardAttack>) {
     cardAttacks.forEach { attack ->
-        Card(modifier = Modifier.padding(all = 8.dp)) {
-            Box(modifier = Modifier.padding(all = 16.dp)) {
-                Column {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        EnergyIconRow(attack.cost?: emptyList())
-                        Text(text = attack.name, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                        attack.damage?.let {
+        if (attack.name != null || attack.effect != null) {
+            Card(modifier = Modifier.padding(all = 8.dp)) {
+                Box(modifier = Modifier.padding(all = 16.dp)) {
+                    Column {
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            EnergyIconRow(attack.cost ?: emptyList())
                             Text(
-                                text = it,
-                                fontSize = 24.sp,
+                                text = attack.name ?: "",
+                                fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold
                             )
+                            attack.damage?.let {
+                                Text(
+                                    text = it,
+                                    fontSize = 24.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
                         }
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+                        attack.effect?.let { Text(text = it, fontSize = 18.sp) }
                     }
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
-                    attack.effect?.let { Text(text = it, fontSize = 18.sp) }
                 }
             }
         }

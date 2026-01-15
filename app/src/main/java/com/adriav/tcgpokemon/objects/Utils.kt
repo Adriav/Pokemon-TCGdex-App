@@ -28,10 +28,51 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.adriav.tcgpokemon.R
 import net.tcgdex.sdk.models.subs.CardWeakRes
+import java.text.Normalizer
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+
+// - - - - - [ OBJECTS ] - - - - -
+sealed class EnergyType(
+    val apiName: String,
+    @param:DrawableRes val icon: Int
+) {
+    object Colorless : EnergyType("Colorless", R.drawable.colorless)
+    object Darkness : EnergyType("Darkness", R.drawable.darkness)
+    object Fairy : EnergyType("Fairy", R.drawable.fairy)
+    object Water : EnergyType("Water", R.drawable.water)
+    object Fire : EnergyType("Fire", R.drawable.fire)
+    object Grass : EnergyType("Grass", R.drawable.grass)
+    object Lightning : EnergyType("Lightning", R.drawable.lightning)
+    object Metal : EnergyType("Metal", R.drawable.metal)
+    object Psychic : EnergyType("Psychic", R.drawable.psychic)
+    object Fighting : EnergyType("Fighting", R.drawable.fighting)
+    object Dragon : EnergyType("Dragon", R.drawable.dragon)
+
+    companion object {
+        fun fromApi(value: String): EnergyType =
+            listOf(
+                Colorless, Darkness, Fairy, Water, Fire,
+                Grass, Lightning, Metal, Psychic, Fighting, Dragon
+            ).firstOrNull { it.apiName.equals(value, true) }
+                ?: Colorless
+    }
+}
+
+
+enum class CardCategory {
+    TRAINER,
+    ENERGY
+}
+
+sealed class CardFilter {
+    data class Energy(val energyType: EnergyType) : CardFilter()
+    data class Category(val category: CardCategory) : CardFilter()
+}
+
+// - - - - - - [ FUNCTIONS / COMPONENTS ] - - - - - -
 
 @Composable
 fun AppHeader(text: String = "Todas las ...") {
@@ -68,7 +109,7 @@ fun CenteredProgressIndicator() {
     }
 }
 
-@SuppressLint("LocalContextResourcesRead")
+@SuppressLint("LocalContextResourcesRead", "DiscouragedApi")
 @Composable
 fun getTypeColor(colorName: String): Color {
     val context = LocalContext.current
@@ -83,32 +124,6 @@ fun getTypeColor(colorName: String): Color {
         colorResource(id = colorResId)
     } else {
         colorResource(R.color.Colorless)
-    }
-}
-
-sealed class EnergyType(
-    val apiName: String,
-    @DrawableRes val icon: Int
-) {
-    object Colorless : EnergyType("Colorless", R.drawable.colorless)
-    object Darkness : EnergyType("Darkness", R.drawable.darkness)
-    object Fairy : EnergyType("Fairy", R.drawable.fairy)
-    object Water : EnergyType("Water", R.drawable.water)
-    object Fire : EnergyType("Fire", R.drawable.fire)
-    object Grass : EnergyType("Grass", R.drawable.grass)
-    object Lightning : EnergyType("Lightning", R.drawable.lightning)
-    object Metal : EnergyType("Metal", R.drawable.metal)
-    object Psychic : EnergyType("Psychic", R.drawable.psychic)
-    object Fighting : EnergyType("Fighting", R.drawable.fighting)
-    object Dragon : EnergyType("Dragon", R.drawable.dragon)
-
-    companion object {
-        fun fromApi(value: String): EnergyType =
-            listOf(
-                Colorless, Darkness, Fairy, Water, Fire,
-                Grass, Lightning, Metal, Psychic, Fighting, Dragon
-            ).firstOrNull { it.apiName.equals(value, true) }
-                ?: Colorless
     }
 }
 
@@ -151,10 +166,10 @@ fun WeakResIconRow(weakRes: List<CardWeakRes>) {
 @Composable
 fun RetreatCostIcons(cost: Int) {
     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-        if (cost <= 1) {
+        if (cost < 1) {
             Text(text = "Free")
         } else {
-            for (i in 1..cost) {
+            repeat(cost) {
                 Image(
                     painter = painterResource(R.drawable.colorless),
                     contentDescription = "Colorless",
@@ -167,9 +182,14 @@ fun RetreatCostIcons(cost: Int) {
 
 fun Long.toReadableDate(
     pattern: String = "dd/MM/yyyy"
-) : String {
+): String {
     val formatter = DateTimeFormatter
         .ofPattern(pattern, Locale.getDefault())
 
     return Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).format(formatter)
 }
+
+fun String.normalize(): String =
+    Normalizer
+        .normalize(this, Normalizer.Form.NFD)
+        .replace("\\p{Mn}+".toRegex(), "")

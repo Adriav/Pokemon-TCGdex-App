@@ -1,14 +1,21 @@
 package com.adriav.tcgpokemon.navigation
 
-import android.util.Log
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.adriav.tcgpokemon.models.AllSeriesViewModel
 import com.adriav.tcgpokemon.models.AllSetsViewModel
-import com.adriav.tcgpokemon.models.HomeViewModel
 import com.adriav.tcgpokemon.models.MyCollectionViewModel
 import com.adriav.tcgpokemon.models.SearchCardViewModel
 import com.adriav.tcgpokemon.models.SingleCardViewModel
@@ -30,20 +37,40 @@ import com.adriav.tcgpokemon.views.singleview.SingleSerieScreen
 import com.adriav.tcgpokemon.views.singleview.SingleSetScreen
 
 @Composable
-fun NavigationWrapper() {
+fun NavigationWrapper(isDarkMode: Boolean, paddingValues: PaddingValues, onToggleTheme: () -> Unit) {
     val backStack = rememberNavBackStack(Home)
+
     NavDisplay(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
+            .padding(horizontal = 8.dp),
         backStack = backStack,
         onBack = { backStack.removeLastOrNull() },
+        transitionSpec = {
+            // Slide in from right when navigating forward
+            slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300)) togetherWith
+                    slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(300))
+        },
+        popTransitionSpec = {
+            // Slide in from left when navigating back
+            slideInHorizontally(initialOffsetX = { -it }, animationSpec = tween(300)) togetherWith
+                    slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300))
+        },
+        predictivePopTransitionSpec = {
+            // Slide in from left when navigating back
+            slideInHorizontally(initialOffsetX = { -it }, animationSpec = tween(300)) togetherWith
+                    slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300))
+        },
         entryProvider = entryProvider {
             entry<Home> {
-                val homeViewModel = hiltViewModel<HomeViewModel>()
                 HomeScreen(
                     navigateToAllSets = { backStack.add(AllSets) },
                     navigateToAllSeries = { backStack.add(AllSeries) },
                     navigateToMyCollection = { backStack.add(Routes.MyCollection) },
                     navigateToSearchScreen = { backStack.add(Routes.CardSearchResult) },
-                    viewModel = homeViewModel
+                    isDarkMode = isDarkMode,
+                    onToggleTheme = onToggleTheme
                 )
             }
             entry<AllSeries> {
@@ -79,9 +106,12 @@ fun NavigationWrapper() {
             }
             entry<SingleCard> { args ->
                 val singleCardViewModel = hiltViewModel<SingleCardViewModel>()
-                SingleCardScreen(singleCardViewModel, args.cardID, navigateToCardSet = { setID ->
-                    backStack.add(SingleSet(setID))
-                })
+                SingleCardScreen(
+                    singleCardViewModel,
+                    args.cardID,
+                    navigateToCardSet = { setID ->
+                        backStack.add(SingleSet(setID))
+                    })
             }
             entry<Routes.MyCollection> {
                 val myCollectionViewModel = hiltViewModel<MyCollectionViewModel>()
@@ -92,8 +122,6 @@ fun NavigationWrapper() {
             entry<Routes.CardSearchResult> {
                 val searchCardViewModel = hiltViewModel<SearchCardViewModel>()
                 SearchCardScreen(viewModel = searchCardViewModel) { cardID ->
-                    val clickedAt: Long = System.currentTimeMillis()
-                    Log.i("card", "$clickedAt: $cardID")
                     backStack.add(SingleCard(cardID))
                 }
             }

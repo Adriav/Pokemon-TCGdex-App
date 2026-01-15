@@ -1,5 +1,6 @@
 package com.adriav.tcgpokemon.views.items
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -25,7 +26,8 @@ fun CollectionCardItem(card: CardEntity, onClick: (CardEntity) -> Unit) {
             .fillMaxWidth()
             .aspectRatio(0.65f)
             .clickable { onClick(card) },
-        elevation = CardDefaults.cardElevation((4.dp))
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         val imageURL = card.imageUrl.replace("HIGH","LOW")
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -34,7 +36,7 @@ fun CollectionCardItem(card: CardEntity, onClick: (CardEntity) -> Unit) {
                 model = imageURL,
                 contentDescription = card.name,
                 placeholder = painterResource(R.drawable.loading_progress_icon),
-                error = painterResource(R.drawable.verror_code_vector_icon),
+                error = painterResource(R.drawable.card_back),
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
