@@ -91,6 +91,43 @@ object CardImageMapper {
             "ecard3-H31" -> "https://static.tcgcollector.com/content/images/93/cd/2d/93cd2d332d6f74b0ec499a0caed4e6a285e4a5d4e4d98819d946de3b2c4cb72a.jpg"
             "ecard3-H32" -> "https://static.tcgcollector.com/content/images/9f/93/06/9f9306899ef026d68d1b8cd753b7fe1075edad58715f0b9673a26b719a16829c.jpg"
 
+            // Poke Card Creator Pack (PCP)
+            "ex5.5-1" -> "https://static.tcgcollector.com/content/images/99/dd/41/99dd418926c98a7e0535277cc189293a692509d7b3c7b4155bcb60c3b649ff25.jpg"
+            "ex5.5-2" -> "https://static.tcgcollector.com/content/images/97/65/ab/9765ab4b33da699e648a780588a188a82e7d4ccdea788e54a5ed85e467f71fc1.jpg"
+            "ex5.5-3" -> "https://static.tcgcollector.com/content/images/91/dd/e2/91dde208ded7ee0d2d0624b45f34cab47af518607daf2f34e87d05f8737c6695.jpg"
+            "ex5.5-4" -> "https://static.tcgcollector.com/content/images/7b/b8/16/7bb816def8d90f1deb46eec298297fe5300e913b8813b87780922f2fa005738b.jpg"
+            "ex5.5-5" -> "https://static.tcgcollector.com/content/images/88/e9/bb/88e9bb484dcd7cb682ef456983d52838f14f5e171e211520f0748f1ff8b1ed7a.jpg"
+
+            // Unseen Forces Unown Collection
+            "exu-!" -> "https://static.tcgcollector.com/content/images/67/16/8f/67168f2b18374c1a0e36bbc67501e43ba7042b5c427ef0c4528a4d8f9cf1cd97.jpg"
+            "exu-%3F" -> "https://static.tcgcollector.com/content/images/36/22/a4/3622a4b01037189535245048ea74fc0db9de8290d793e7632d09abd0bc519014.jpg"
+            "exu-A" -> "https://static.tcgcollector.com/content/images/2b/87/af/2b87af34f721d2c5b0e218939adbc6b9dea5d98d6b778bea755f317dae2e9a04.jpg"
+            "exu-B" -> "https://static.tcgcollector.com/content/images/84/2c/84/842c847bb36c5b501deb6b412f811443bc3018f09a1e46e8727095b43bc9bb52.jpg"
+            "exu-C" -> "https://static.tcgcollector.com/content/images/5b/71/20/5b7120be69e6b4d1282a7c5752898ceda8156e932975350bcc4c3da81ea74ee3.jpg"
+            "exu-D" -> "https://static.tcgcollector.com/content/images/8a/e2/80/8ae2801d5307f556af64fdebe1b7c97f2b3eb6020bbbd812cc81b1cef30b5a66.jpg"
+            "exu-E" -> "https://static.tcgcollector.com/content/images/d3/26/67/d32667ceb28d4d5eb1b8de8dcf6f92ef085f46b59316ce236a90983a8bd07b7c.jpg"
+            "exu-F" -> "https://static.tcgcollector.com/content/images/b6/2a/32/b62a32d8883ee6c52ef8117326cfcdfc9a65cff30413c7bc41378a9114abc2f8.jpg"
+            "exu-G" -> "https://static.tcgcollector.com/content/images/c6/ed/b5/c6edb5e672d720d3b59490b303dd96dea18dbb9825aa6fdfb1e3d136be706e5e.jpg"
+            "exu-H" -> "https://static.tcgcollector.com/content/images/7e/b4/a9/7eb4a97357f9df6cb5179c20c1278a1d41223a60607ac06bafbb9d4093d6e67b.jpg"
+            "exu-I" -> "https://static.tcgcollector.com/content/images/51/37/da/5137da538e463268dc8526c922149a5c2541637b6451f09566cb432e4b8b4885.jpg"
+            "exu-J" -> "https://static.tcgcollector.com/content/images/d0/5c/fc/d05cfc3e9b602d9a271031e5972f8034c9ec3d8b79f40d156ec7ecd4d6dbf3b5.jpg"
+            "exu-K" -> "https://static.tcgcollector.com/content/images/d3/77/6b/d3776bde29e84a7090482f42504d8ed937e58a136a26c93aef287beec6e0dac4.jpg"
+            "exu-L" -> "https://static.tcgcollector.com/content/images/db/d5/33/dbd533cabdaf03062a6fb8f33480f77c158af8f57e92f851d7a75c8d13831a44.jpg"
+            "exu-M" -> "https://static.tcgcollector.com/content/images/7e/21/08/7e2108dc373da76e6013b05d178ada03b490c449025f503ef3f7976d17c5c3bf.jpg"
+            "exu-N" -> "https://static.tcgcollector.com/content/images/79/e6/6d/79e66d7eb6799b831547f941fea118d147b5287853a127857771008868ae78d5.jpg"
+            "exu-O" -> "https://static.tcgcollector.com/content/images/b5/6d/75/b56d758d0fe376d60a585c81fb762e037354a9ee23653fefed14c1742cb3b218.jpg"
+            "exu-P" -> "https://static.tcgcollector.com/content/images/4b/d1/5e/4bd15e1999beecfc246b2b9901802857c5b0bb240356f7d5f2fd172e48bef1cd.jpg"
+            "exu-Q" -> "https://static.tcgcollector.com/content/images/70/5a/e8/705ae84cf8421054eed72e0b9f620873d6841faa1b7a6e8d91624dbdb02acdf6.jpg"
+            "exu-R" -> "https://static.tcgcollector.com/content/images/1f/74/6c/1f746c6df89f89c252687e8cad66f8f09b0db4f3b25b52857a345c289bd9e8cc.jpg"
+            "exu-S" -> "https://static.tcgcollector.com/content/images/e5/ed/6d/e5ed6d3aaad274a4dbc22e957e348eb53d7fbec7ec04a5dbe572fbb2bf099b28.jpg"
+            "exu-T" -> "https://static.tcgcollector.com/content/images/1a/dd/6f/1add6ffc8d3c9ede6c68389fc8d9b9ebe295541dea4ada2d4d2237f7528e6088.jpg"
+            "exu-U" -> "https://static.tcgcollector.com/content/images/95/22/8b/95228b8544378e2d946a5f6a2efeb8fa5630a7dc2a53143c975f8b9fda43fb54.jpg"
+            "exu-V" -> "https://static.tcgcollector.com/content/images/97/49/86/974986f09bad0c90b4addcaa7f46193a100fd73c13845379b82530d5e3631701.jpg"
+            "exu-W" -> "https://static.tcgcollector.com/content/images/1d/1b/87/1d1b875b7896d55b464608ef4592a7beacfe38f02a9fe3acfaac5064bcf3a39e.jpg"
+            "exu-X" -> "https://static.tcgcollector.com/content/images/1a/c7/ce/1ac7ce2d1c7e7833d12c4f8c2b0ea57bb258b3fc7bcf3cf67a14fa68a7c8d62c.jpg"
+            "exu-Y" -> "https://static.tcgcollector.com/content/images/c1/c6/dd/c1c6ddd076f787d3816f1ca74de1e4bfc3b1ac2625f0728fc2295622eec30b0d.jpg"
+            "exu-Z" -> "https://static.tcgcollector.com/content/images/1b/b4/70/1bb47082e211773c10347f9d0a55a3bcd4dfb8929e7737952b8d45afb4615ce4.jpg"
+
             else -> "null"
         }
 }
