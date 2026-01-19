@@ -22,6 +22,7 @@ fun AllSetsScreen(viewModel: AllSetsViewModel, navigateToSet: (String) -> Unit) 
     if (cardSets == null) {
         CenteredProgressIndicator()
     } else {
+        viewModel.sortSets()
         Column {
             AppHeader("All Sets")
             SetsItems(cardSets!!, navigateToSet)

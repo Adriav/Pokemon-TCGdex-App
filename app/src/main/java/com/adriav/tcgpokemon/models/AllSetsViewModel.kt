@@ -24,4 +24,8 @@ class AllSetsViewModel @Inject constructor(private val tcgdex: TCGdex) : ViewMod
             }
         }
     }
+
+    fun sortSets() {
+        _cardSets.value.sortWith(compareBy { it.name })
+    }
 }
