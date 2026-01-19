@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -86,11 +87,24 @@ fun SetImage(set: Set) {
 fun SetInfo(set: Set) {
     val cardCount = set.cardCount
     Column(modifier = Modifier.fillMaxWidth()) {
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+            Box(contentAlignment = Alignment.Center) {
+                Row() {
+                    Text(text = "Set: ", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                    Text(text = set.name ?: "", fontSize = 20.sp)
+                }
+            }
+            Box(contentAlignment = Alignment.Center) {
+                Row() {
+                    Text(text = "Serie: ", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                    Text(text = set.serie.name, fontSize = 20.sp)
+                }
+            }
+        }
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-
             Row {
                 Text(text = "Official: ", fontWeight = FontWeight.Bold, fontSize = 20.sp)
                 Text(text = cardCount.official.toString(), fontSize = 20.sp)
@@ -129,7 +143,11 @@ fun SetInfo(set: Set) {
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp
                         )
-                        Text(text = cardCount.firstEd.toString(), fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                        Text(
+                            text = cardCount.firstEd.toString(),
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp
+                        )
                     }
                 }
             }
