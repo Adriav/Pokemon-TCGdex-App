@@ -28,12 +28,6 @@ fun CardSearchItemView(cardResume: CardResume) {
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
-        /*
-        val cardImage =
-            cardResume.getImageUrl(Quality.LOW, Extension.WEBP)
-                .replace("LOW", "low")
-
-         */
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(text = cardResume.name, modifier = Modifier.padding(horizontal = 8.dp))
             AsyncImage(

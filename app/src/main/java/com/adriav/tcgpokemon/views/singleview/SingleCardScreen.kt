@@ -1,6 +1,5 @@
 package com.adriav.tcgpokemon.views.singleview
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -84,7 +83,6 @@ fun SingleCardScreen(
     if (card == null) {
         CenteredProgressIndicator()
     } else {
-        Log.i("card", "Card: $cardID")
         Column(Modifier.verticalScroll(scrollState, enabled = true, reverseScrolling = false)) {
             AppHeader(cardName)
             DisplayCardImage(imageURL, cardName)

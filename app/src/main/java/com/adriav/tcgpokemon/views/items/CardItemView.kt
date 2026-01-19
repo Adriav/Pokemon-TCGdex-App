@@ -28,7 +28,6 @@ import net.tcgdex.sdk.models.CardResume
 
 @Composable
 fun CardItemView(cardResume: CardResume, index: Int? = null) {
-    val cardImage = cardResume.image
     Box(
         modifier = Modifier
             .fillMaxWidth(),
@@ -64,11 +63,6 @@ fun CardItemView(cardResume: CardResume, index: Int? = null) {
                         )
                     }
                 }
-                /*
-                val cardImage =
-                    cardResume.getImageUrl(Quality.LOW, Extension.WEBP).replace("LOW", "low")
-
-                 */
                 AsyncImage(
                     model = getCardResumeImageURL(cardResume),
                     contentDescription = cardResume.id,
