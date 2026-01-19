@@ -38,11 +38,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.adriav.tcgpokemon.BuildConfig
+import com.adriav.tcgpokemon.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -115,7 +118,7 @@ fun HomeTopAppBar(isDarkMode: Boolean, onToggleTheme: () -> Unit) {
         title = {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "Pokemon TCG Dex",
+                    text = stringResource(R.string.app_name),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.fillMaxWidth(),
@@ -123,7 +126,7 @@ fun HomeTopAppBar(isDarkMode: Boolean, onToggleTheme: () -> Unit) {
                     fontSize = 28.sp
                 )
                 Text(
-                    text = "version: v1.0",
+                    text = stringResource(R.string.app_version, BuildConfig.VERSION_NAME),
                     fontSize = 14.sp,
                     color = Color(0xFF8E8B8B),
                     fontStyle = FontStyle.Italic

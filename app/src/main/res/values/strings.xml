@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Pokemon TCG Collection</string>
+    <string name="app_name">Pokedex TCG</string>
+    <string name="app_version">Version: v%1$s</string>
 </resources>
