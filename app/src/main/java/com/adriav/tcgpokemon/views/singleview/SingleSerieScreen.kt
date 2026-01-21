@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -78,25 +79,30 @@ fun SerieHeader(serie: Serie, sets: List<SetResume?>) {
             .fillMaxWidth()
             .height(200.dp)
     ) {
-        AsyncImage(
-            model = serie.getLogoUrl(Extension.WEBP),
-            contentDescription = serie.name,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(all = 16.dp),
-            contentScale = ContentScale.Fit,
-            placeholder = painterResource(R.drawable.loading_progress_icon),
-            error = painterResource(R.drawable.series_placeholder)
-        )
+        Column {
+            Text(
+                text = serie.name,
+                fontWeight = FontWeight.Bold,
+                fontSize = 24.sp,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+            AsyncImage(
+                model = serie.getLogoUrl(Extension.WEBP),
+                contentDescription = serie.name,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(all = 16.dp),
+                contentScale = ContentScale.Fit,
+                placeholder = painterResource(R.drawable.loading_progress_icon),
+                error = painterResource(R.drawable.series_placeholder)
+            )
+        }
     }
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        Row {
-            Text(text = "Name: ", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-            Text(text = serie.name, fontSize = 20.sp)
-        }
         Row {
             Text(text = "Sets: ", fontWeight = FontWeight.Bold, fontSize = 20.sp)
             Text(text = sets.size.toString(), fontSize = 20.sp)

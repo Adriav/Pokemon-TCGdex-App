@@ -94,10 +94,11 @@ fun SetInfo(set: Set, navigateToSerie: (String) -> Unit) {
                 .fillMaxWidth()
                 .padding(vertical = 4.dp), contentAlignment = Alignment.Center
         ) {
-            Row {
-                Text(text = "Name: ", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-                Text(text = set.name ?: "", fontSize = 20.sp)
-            }
+            Text(
+                text = set.name ?: "",
+                fontWeight = FontWeight.Bold,
+                fontSize = 24.sp,
+            )
         }
         Box(
             modifier = Modifier
