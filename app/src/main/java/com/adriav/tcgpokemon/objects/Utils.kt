@@ -37,7 +37,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-// - - - - - [ OBJECTS ] - - - - -
+// - - - - - - - - - - [ OBJECTS ] - - - - - - - - - -
 sealed class EnergyType(
     val apiName: String,
     @param:DrawableRes val icon: Int
@@ -75,7 +75,7 @@ sealed class CardFilter {
     data class Category(val category: CardCategory) : CardFilter()
 }
 
-// - - - - - - [ FUNCTIONS / COMPONENTS ] - - - - - -
+// - - - - - - - - - - - [ FUNCTIONS / COMPONENTS ] - - - - - - - - - - -
 
 @Composable
 fun AppHeader(text: String = "Todas las ...") {
@@ -202,4 +202,18 @@ fun getCardResumeImageURL(cardResume: CardResume): String {
     return if (cardResume.image != null) cardResume.getImageUrl(Quality.LOW, Extension.WEBP)
         .replace("LOW", "low")
     else CardImageMapper.map(cardResume.id)
+}
+
+fun isVersionSupported(installed: String, minRequired: String): Boolean {
+    val installedParts: List<Int> =
+        if (installed.isBlank()) listOf(0, 0, 0) else installed.split(".").map { it.toInt() }
+    val requiredParts: List<Int> =
+        if (minRequired.isBlank()) listOf(0, 0, 0) else minRequired.split(".").map { it.toInt() }
+
+    for ((currentPart, minVersionPart) in installedParts.zip(requiredParts)) {
+        if (currentPart != minVersionPart) {
+            return currentPart > minVersionPart
+        }
+    }
+    return true
 }
