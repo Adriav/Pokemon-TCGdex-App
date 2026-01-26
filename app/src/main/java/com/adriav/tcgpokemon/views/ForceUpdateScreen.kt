@@ -1,20 +1,29 @@
 package com.adriav.tcgpokemon.views
 
 import android.content.Intent
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
+import com.adriav.tcgpokemon.R
 
 @Composable
 fun ForceUpdateScreen() {
@@ -25,18 +34,42 @@ fun ForceUpdateScreen() {
         contentAlignment = Alignment.Center
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Image(
+                modifier = Modifier
+                    .padding(vertical = 16.dp)
+                    .defaultMinSize(minWidth = 100.dp, minHeight = 100.dp)
+                    .size(250.dp, 250.dp)
+                    .offset(x = -(20).dp),
+                painter = painterResource(R.drawable.update_needed),
+                contentDescription = "Update Needed",
+                contentScale = ContentScale.Fit,
+
+                )
             Text(
-                text = "Actualización requerida",
+                text = "Update Needed!",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
 
-            Text(
-                text = "Tu versión de la app está desactualizada.\nPor favor actualiza para continuar."
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp)
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Looks like you are using an old version."
+                    )
+                    Text(
+                        text = "Please update to proceed."
+                    )
+                }
+            }
 
             Button(onClick = {
                 val intent = Intent(
@@ -45,7 +78,12 @@ fun ForceUpdateScreen() {
                 )
                 context.startActivity(intent)
             }) {
-                Text("Actualizar ahora")
+                Text(
+                    text = "Update",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
             }
         }
     }
