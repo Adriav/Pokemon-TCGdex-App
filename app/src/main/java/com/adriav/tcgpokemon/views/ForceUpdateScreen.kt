@@ -41,7 +41,7 @@ fun ForceUpdateScreen() {
                     .padding(vertical = 16.dp)
                     .defaultMinSize(minWidth = 100.dp, minHeight = 100.dp)
                     .size(250.dp, 250.dp)
-                    .offset(x = -(20).dp),
+                    .offset(x = -(16).dp),
                 painter = painterResource(R.drawable.update_needed),
                 contentDescription = "Update Needed",
                 contentScale = ContentScale.Fit,
@@ -66,7 +66,7 @@ fun ForceUpdateScreen() {
                         text = "Looks like you are using an old version."
                     )
                     Text(
-                        text = "Please update to proceed."
+                        text = "Please update to access the application."
                     )
                 }
             }
