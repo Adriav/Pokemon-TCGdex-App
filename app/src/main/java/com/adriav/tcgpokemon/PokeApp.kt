@@ -17,21 +17,22 @@ import com.adriav.tcgpokemon.navigation.NavigationWrapper
 import com.adriav.tcgpokemon.objects.CenteredProgressIndicator
 import com.adriav.tcgpokemon.ui.theme.TCGPokemonTheme
 import com.adriav.tcgpokemon.ui.theme.ThemeViewModel
+import com.adriav.tcgpokemon.views.ForceUpdateScreen
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class PokeApp : Application() {
     @Composable
-    fun AppRoot() {
+    fun AppRoot(mustUpdate: Boolean) {
         val themeViewModel: ThemeViewModel = hiltViewModel()
         val systemDarkTheme = isSystemInDarkTheme()
         LaunchedEffect(Unit) {
             themeViewModel.initTheme(systemDarkTheme)
         }
 
-        val isDarkTheme  by themeViewModel.isDarkTheme.collectAsState()
+        val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
 
-        if (isDarkTheme  == null){
+        if (isDarkTheme == null) {
             CenteredProgressIndicator()
         } else {
             AnimatedContent(
@@ -44,13 +45,16 @@ class PokeApp : Application() {
             ) { darkTheme ->
                 TCGPokemonTheme(darkTheme = darkTheme!!) {
                     Scaffold { paddingValues ->
-                        NavigationWrapper(
-                            darkTheme,
-                            paddingValues
-                        ) { themeViewModel.toggleTheme() }
+                        if (mustUpdate) {
+                            ForceUpdateScreen()
+                        } else {
+                            NavigationWrapper(
+                                darkTheme,
+                                paddingValues
+                            ) { themeViewModel.toggleTheme() }
+                        }
                     }
                 }
-
             }
         }
     }
